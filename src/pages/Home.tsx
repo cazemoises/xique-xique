@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Screen } from '../components/Screen'
 import { PlaceholderPhoto } from '../components/PlaceholderPhoto'
@@ -8,6 +9,7 @@ const categorias = ['Tudo', 'Feminino', 'Masculino', 'Infantil', 'Cama']
 
 export function Home() {
   const { data: polos } = useAsync(getPolos, [])
+  const [categoriaAtiva, setCategoriaAtiva] = useState(categorias[0])
 
   return (
     <Screen>
@@ -25,13 +27,13 @@ export function Home() {
             </svg>
           </div>
         </div>
-        <div className="mt-4 flex items-center gap-2.5 rounded-2xl bg-white px-3.5 py-3">
+        <Link to="/buscar" className="mt-4 flex items-center gap-2.5 rounded-2xl bg-white px-3.5 py-3">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#9B8574" strokeWidth="2.2" strokeLinecap="round">
             <circle cx="11" cy="11" r="7" />
             <path d="M20 20l-4-4" />
           </svg>
           <span className="text-sm text-placeholder">Buscar roupa, banca ou feira</span>
-        </div>
+        </Link>
       </header>
 
       <main className="flex-1 px-5 pt-5">
@@ -74,15 +76,17 @@ export function Home() {
         </div>
 
         <div className="mt-5.5 flex gap-2 overflow-x-auto">
-          {categorias.map((categoria, i) => (
-            <span
+          {categorias.map((categoria) => (
+            <button
               key={categoria}
+              type="button"
+              onClick={() => setCategoriaAtiva(categoria)}
               className={`flex-none rounded-full px-3.5 py-2 text-[12.5px] font-medium ${
-                i === 0 ? 'bg-ink text-white' : 'bg-sand-chip text-[#5C4A3D]'
+                categoria === categoriaAtiva ? 'bg-ink text-white' : 'bg-sand-chip text-[#5C4A3D]'
               }`}
             >
               {categoria}
-            </span>
+            </button>
           ))}
         </div>
 
@@ -117,8 +121,12 @@ export function Home() {
       </main>
 
       <nav className="flex items-center justify-around border-t border-sand-border bg-white px-2 py-2.5 pb-6">
-        <TabItem label="Início" active />
-        <TabItem label="Buscar" />
+        <Link to="/" className="contents">
+          <TabItem label="Início" active />
+        </Link>
+        <Link to="/buscar" className="contents">
+          <TabItem label="Buscar" />
+        </Link>
         <Link to="/pedido/pedido-4127" className="contents">
           <TabItem label="Pedidos" />
         </Link>
