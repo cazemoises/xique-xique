@@ -10,7 +10,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Run frontend tests
         run: |
-          docker run --rm -v $PWD:/app -w /app node:20-alpine sh -c "npm ci && npm run test -- --run"
+          docker run --rm -v $PWD:/app -w /app node:22-alpine sh -c "npm ci && npm run test -- --run"
       - name: Build and deploy
         run: |
           docker compose up -d --build
