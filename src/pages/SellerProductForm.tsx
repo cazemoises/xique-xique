@@ -1,57 +1,68 @@
-import { useState } from 'react'
-import { TopBar } from '../components/TopBar'
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { Screen } from '../components/Screen'
+import { SellerHeader } from '../components/SellerHeader'
 import { PlaceholderPhoto } from '../components/PlaceholderPhoto'
+import { useAsync } from '../hooks/useAsync'
+import { getProduto } from '../services/produtos'
 import { formatPrice } from '../lib/formatPrice'
 
 const TIPOS = ['Vestido', 'Blusa', 'Calça', 'Saia', 'Outro']
 const TAMANHOS = ['PP', 'P', 'M', 'G', 'GG']
+const BANCA_NOME = 'Modas Dona Zefa'
 
-export function SellerNewProduct() {
+export function SellerProductForm() {
+  const { id } = useParams<{ id?: string }>()
+  const modoEdicao = Boolean(id)
+  const { data: produto } = useAsync(() => (id ? getProduto(id) : Promise.resolve(null)), [id])
+
   const [tipo, setTipo] = useState(TIPOS[0])
   const [tamanho, setTamanho] = useState('M')
   const [preco, setPreco] = useState(89.9)
   const [quantidade, setQuantidade] = useState(3)
-  const [publicado, setPublicado] = useState(false)
+  const [salvo, setSalvo] = useState(false)
+
+  useEffect(() => {
+    if (!produto) return
+    setTipo(TIPOS.find((t) => produto.categoria.toLowerCase().startsWith(t.toLowerCase())) ?? TIPOS[0])
+    setTamanho(produto.tamanhos[0] ?? 'M')
+    setPreco(produto.preco)
+  }, [produto])
+
+  if (modoEdicao && !produto) return null
+
+  const titulo = modoEdicao ? 'Editar peça' : 'Nova peça'
+  const cta = modoEdicao ? 'Salvar alterações' : 'Publicar peça'
+  const mensagemSucesso = modoEdicao
+    ? 'Alterações salvas! O catálogo da sua banca já foi atualizado.'
+    : 'Peça publicada! Já aparece no catálogo da sua banca.'
+  const fotoExistente = produto?.fotos[0]
 
   return (
     <Screen>
-      <div className="lg:hidden">
-        <TopBar title="Nova peça" />
-      </div>
-
-      <div className="hidden h-18 flex-none items-center gap-4 bg-ink px-12 lg:flex">
-        <div className="flex flex-none items-center gap-2.25">
-          <svg width="15" height="19" viewBox="0 0 13 17" fill="none" stroke="#F0E4CE" strokeWidth="1.7" strokeLinecap="round">
-            <path d="M6.5 16V4" />
-            <path d="M6.5 9c0-3 2.3-4 2.3-4" />
-            <path d="M6.5 12c0-2.3-2.3-3.2-2.3-3.2" />
-            <circle cx="6.5" cy="2.6" r="1.3" fill="#F0E4CE" stroke="none" />
-          </svg>
-          <span className="font-display text-lg font-bold leading-none text-sand-chip">Painel da banca</span>
-        </div>
-        <span className="text-sm text-sand-2">Modas Dona Zefa</span>
-        <div className="flex-1" />
-        <span className="text-sm font-medium text-sand-2">Sair</span>
-      </div>
+      <SellerHeader active="form" mobileTitle={titulo} />
 
       <div className="flex-1 px-5 pt-4.5 lg:hidden">
-        {publicado && (
+        {salvo && (
           <div className="mb-3.5 rounded-2xl bg-verified-bg px-3.5 py-3 text-sm font-medium text-oliva">
-            Peça publicada! Já aparece no catálogo da sua banca.
+            {mensagemSucesso}
           </div>
         )}
 
-        <div className="flex h-47.5 flex-col items-center justify-center gap-2.25 rounded-2xl border-2 border-dashed border-[#D8B98D] bg-[repeating-linear-gradient(135deg,#F0E0CC_0_8px,#E6D2B9_8px_16px)]">
-          <div className="flex h-13 w-13 items-center justify-center rounded-full bg-white">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7C6244" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M4 8h3l2-3h6l2 3h3v11H4z" />
-              <circle cx="12" cy="13.5" r="3.5" />
-            </svg>
+        {fotoExistente ? (
+          <PlaceholderPhoto label="foto peça" src={fotoExistente} className="h-47.5 w-full rounded-2xl" />
+        ) : (
+          <div className="flex h-47.5 flex-col items-center justify-center gap-2.25 rounded-2xl border-2 border-dashed border-[#D8B98D] bg-[repeating-linear-gradient(135deg,#F0E0CC_0_8px,#E6D2B9_8px_16px)]">
+            <div className="flex h-13 w-13 items-center justify-center rounded-full bg-white">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7C6244" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 8h3l2-3h6l2 3h3v11H4z" />
+                <circle cx="12" cy="13.5" r="3.5" />
+              </svg>
+            </div>
+            <span className="text-base font-bold text-muted">Toque para tirar a foto</span>
+            <span className="text-xs text-muted-2">Só 1 foto já publica a peça</span>
           </div>
-          <span className="text-base font-bold text-muted">Toque para tirar a foto</span>
-          <span className="text-xs text-muted-2">Só 1 foto já publica a peça</span>
-        </div>
+        )}
 
         <p className="mb-2.25 mt-5 text-base font-bold">O que é?</p>
         <div className="flex flex-wrap gap-2">
@@ -122,33 +133,37 @@ export function SellerNewProduct() {
       <div className="fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-[480px] border-t border-sand-border bg-white px-4.5 py-3.5 pb-7.5 md:sticky md:inset-x-auto lg:hidden">
         <button
           type="button"
-          onClick={() => setPublicado(true)}
+          onClick={() => setSalvo(true)}
           className="w-full rounded-2xl bg-terracota py-4 text-center text-lg font-bold text-white shadow-cta"
         >
-          Publicar peça · {formatPrice(preco)}
+          {cta} · {formatPrice(preco)}
         </button>
       </div>
 
       <div className="mx-auto hidden w-full max-w-page-narrow flex-1 gap-9 px-8 py-10 lg:grid lg:grid-cols-[1fr_22.5rem] lg:items-start">
         <div className="flex flex-col gap-5.5">
-          {publicado && (
+          {salvo && (
             <div className="rounded-2xl bg-verified-bg px-4 py-3.5 text-sm font-medium text-oliva">
-              Peça publicada! Já aparece no catálogo da sua banca.
+              {mensagemSucesso}
             </div>
           )}
 
-          <h2 className="m-0 font-display text-2xl font-bold">Nova peça</h2>
+          <h2 className="m-0 font-display text-2xl font-bold">{titulo}</h2>
 
-          <div className="flex h-55 flex-col items-center justify-center gap-2.5 rounded-2xl border-2 border-dashed border-[#D8B98D] bg-[repeating-linear-gradient(135deg,#F0E0CC_0_8px,#E6D2B9_8px_16px)]">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7C6244" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M4 8h3l2-3h6l2 3h3v11H4z" />
-                <circle cx="12" cy="13.5" r="3.5" />
-              </svg>
+          {fotoExistente ? (
+            <PlaceholderPhoto label="foto peça" src={fotoExistente} className="h-55 w-full rounded-2xl" />
+          ) : (
+            <div className="flex h-55 flex-col items-center justify-center gap-2.5 rounded-2xl border-2 border-dashed border-[#D8B98D] bg-[repeating-linear-gradient(135deg,#F0E0CC_0_8px,#E6D2B9_8px_16px)]">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7C6244" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4 8h3l2-3h6l2 3h3v11H4z" />
+                  <circle cx="12" cy="13.5" r="3.5" />
+                </svg>
+              </div>
+              <span className="text-base font-bold text-muted">Clique para enviar a foto</span>
+              <span className="text-xs text-muted-2">Só 1 foto já publica a peça</span>
             </div>
-            <span className="text-base font-bold text-muted">Clique para enviar a foto</span>
-            <span className="text-xs text-muted-2">Só 1 foto já publica a peça</span>
-          </div>
+          )}
 
           <div>
             <p className="mb-2.5 text-sm font-bold">O que é?</p>
@@ -220,21 +235,21 @@ export function SellerNewProduct() {
 
           <button
             type="button"
-            onClick={() => setPublicado(true)}
+            onClick={() => setSalvo(true)}
             className="max-w-80 rounded-2xl bg-terracota py-4.25 text-center text-base font-bold text-white shadow-cta"
           >
-            Publicar peça · {formatPrice(preco)}
+            {cta} · {formatPrice(preco)}
           </button>
         </div>
 
         <div className="sticky top-10 flex flex-col gap-2.5">
           <span className="text-xs font-semibold uppercase tracking-wide text-muted-2">Como o comprador vai ver</span>
           <div className="w-55 overflow-hidden rounded-2xl border border-sand-border bg-white">
-            <PlaceholderPhoto label="foto peça" className="h-62.5 w-full" />
+            <PlaceholderPhoto label="foto peça" src={fotoExistente} className="h-62.5 w-full" />
             <div className="flex flex-col gap-1 px-3.25 py-3.5">
               <span className="text-sm leading-snug">{tipo}</span>
               <span className="text-lg font-bold">{formatPrice(preco)}</span>
-              <span className="text-xs text-muted-2">Tam. {tamanho} · Modas Dona Zefa</span>
+              <span className="text-xs text-muted-2">Tam. {tamanho} · {BANCA_NOME}</span>
             </div>
           </div>
           <p className="m-0 max-w-55 text-xs leading-relaxed text-muted-2">

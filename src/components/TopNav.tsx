@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import type { ReactNode } from 'react'
 
 interface TopNavProps {
-  active?: 'bancas' | 'buscar'
+  active?: 'bancas' | 'buscar' | 'feiras'
   backTo?: string
   backLabel?: string
   showSearch?: boolean
@@ -12,7 +12,7 @@ interface TopNavProps {
   subtitle?: ReactNode
 }
 
-function Logo() {
+export function Logo() {
   return (
     <Link to="/" className="flex flex-none items-center gap-2.25">
       <svg width="16" height="21" viewBox="0 0 13 17" fill="none" stroke="#8C4A3A" strokeWidth="1.7" strokeLinecap="round">
@@ -65,7 +65,16 @@ export function TopNav({ active, backTo, backLabel, showSearch, showLocation, sh
           >
             Buscar peça
           </Link>
-          <span className="text-muted-2">Feiras</span>
+          <Link
+            to="/feiras"
+            className={
+              active === 'feiras'
+                ? 'flex h-19 items-center border-b-[2.5px] border-terracota text-ink'
+                : 'text-muted-2'
+            }
+          >
+            Feiras
+          </Link>
           <Link to="/pedido/pedido-4127" className="text-muted-2">
             Pedidos
           </Link>

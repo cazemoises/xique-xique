@@ -7,7 +7,10 @@ import { ProductSearch } from './pages/ProductSearch'
 import { ProductDetail } from './pages/ProductDetail'
 import { Cart } from './pages/Cart'
 import { OrderTracking } from './pages/OrderTracking'
-import { SellerNewProduct } from './pages/SellerNewProduct'
+import { SellerProductForm } from './pages/SellerProductForm'
+import { SellerProducts } from './pages/SellerProducts'
+import { Fairs } from './pages/Fairs'
+import { NotFound } from './pages/NotFound'
 
 function App() {
   return (
@@ -21,7 +24,11 @@ function App() {
           <Route path="/produto/:id" element={<ProductDetail />} />
           <Route path="/sacola" element={<Cart />} />
           <Route path="/pedido/:id" element={<OrderTracking />} />
-          <Route path="/feirante/nova-peca" element={<SellerNewProduct />} />
+          <Route path="/feiras" element={<Fairs />} />
+          <Route path="/feirante/produtos" element={<SellerProducts />} />
+          <Route path="/feirante/produtos/:id/editar" element={<SellerProductForm />} />
+          <Route path="/feirante/nova-peca" element={<SellerProductForm />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </CartProvider>

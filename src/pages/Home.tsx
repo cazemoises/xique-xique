@@ -96,7 +96,7 @@ export function Home() {
 
         <div className="mt-6 flex items-baseline justify-between">
           <h3 className="m-0 font-display text-xl font-bold">Feiras abertas agora</h3>
-          <span className="text-xs font-medium text-terracota">ver todas</span>
+          <Link to="/feiras" className="text-xs font-medium text-terracota">ver todas</Link>
         </div>
         <div className="mt-3 grid grid-cols-1 gap-3 sm:[grid-template-columns:repeat(auto-fit,minmax(11rem,1fr))]">
           {polos?.map((polo) => (
@@ -201,7 +201,7 @@ export function Home() {
         <div className="px-12 pt-11">
           <div className="flex items-baseline justify-between">
             <h3 className="m-0 font-display text-2xl font-bold">Feiras abertas agora</h3>
-            <span className="text-sm font-semibold text-terracota">ver todas →</span>
+            <Link to="/feiras" className="text-sm font-semibold text-terracota">ver todas →</Link>
           </div>
           <div className="mt-4.5 grid grid-cols-4 gap-4.5">
             {polos?.map((polo) => (

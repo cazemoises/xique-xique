@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { Screen } from '../components/Screen'
 import { TopNav } from '../components/TopNav'
 import { PlaceholderPhoto } from '../components/PlaceholderPhoto'
@@ -7,12 +7,17 @@ import { VerifiedBadge } from '../components/VerifiedBadge'
 import { VerifiedInfoSheet } from '../components/VerifiedInfoSheet'
 import { useAsync } from '../hooks/useAsync'
 import { getBancas } from '../services/bancas'
+import { getPolos } from '../services/polos'
 import { formatEta } from '../lib/formatEta'
 
 const filtros = ['Mais perto ▾', 'Entrega hoje', 'Feminino', 'Pix']
 
 export function VendorsNearby() {
-  const { data: bancas } = useAsync(() => getBancas(), [])
+  const [searchParams, setSearchParams] = useSearchParams()
+  const poloIdFiltro = searchParams.get('polo') ?? undefined
+  const { data: bancas } = useAsync(() => getBancas(poloIdFiltro), [poloIdFiltro])
+  const { data: polos } = useAsync(() => getPolos(), [])
+  const poloAtivo = polos?.find((p) => p.id === poloIdFiltro)
   const [verificadaAberta, setVerificadaAberta] = useState(false)
   const [categoriasFiltro, setCategoriasFiltro] = useState<string[]>([])
   const [entregaGratisOnly, setEntregaGratisOnly] = useState(false)
@@ -56,6 +61,15 @@ export function VendorsNearby() {
           </Link>
           <span className="font-display text-lg font-bold">Bancas perto de você</span>
         </div>
+        {poloAtivo && (
+          <button
+            type="button"
+            onClick={() => setSearchParams({})}
+            className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-ink px-3 py-2 text-xs font-medium text-white"
+          >
+            Filtrando por: {poloAtivo.nome} <span className="text-sand-2">×</span>
+          </button>
+        )}
         <div className="mt-3.5 flex gap-2 overflow-x-auto">
           {filtros.map((filtro, i) => (
             <span
@@ -186,7 +200,18 @@ export function VendorsNearby() {
 
         <main className="flex-1 p-10">
           <div className="mb-5 flex items-baseline justify-between">
-            <h2 className="m-0 font-display text-2xl font-bold">Bancas perto de você</h2>
+            <div className="flex items-center gap-3">
+              <h2 className="m-0 font-display text-2xl font-bold">Bancas perto de você</h2>
+              {poloAtivo && (
+                <button
+                  type="button"
+                  onClick={() => setSearchParams({})}
+                  className="flex items-center gap-1.5 rounded-full bg-ink px-3 py-1.5 text-xs font-medium text-white"
+                >
+                  Filtrando por: {poloAtivo.nome} <span className="text-sand-2">×</span>
+                </button>
+              )}
+            </div>
             <span className="text-sm text-muted-2">{bancasFiltradas.length} bancas encontradas</span>
           </div>
           <div className="grid grid-cols-3 gap-4.5">

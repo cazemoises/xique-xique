@@ -20,3 +20,8 @@ export async function buscarProdutos(params: BuscarProdutosParams): Promise<Ofer
   const res = await fetch(`/api/produtos/buscar?${searchParams}`)
   return res.json()
 }
+
+export async function removerProduto(id: string): Promise<void> {
+  const res = await fetch(`/api/produtos/${id}`, { method: 'DELETE' })
+  if (!res.ok) throw new Error('Não foi possível remover a peça')
+}

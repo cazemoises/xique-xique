@@ -81,6 +81,13 @@ export const handlers = [
     return HttpResponse.json(produto)
   }),
 
+  http.delete('/api/produtos/:id', ({ params }) => {
+    const index = produtos.findIndex((p) => p.id === params.id)
+    if (index === -1) return new HttpResponse(null, { status: 404 })
+    produtos.splice(index, 1)
+    return new HttpResponse(null, { status: 204 })
+  }),
+
   http.get('/api/pedidos/:id', ({ params }) => {
     const pedido = pedidosCriados.get(String(params.id))
     if (!pedido) return new HttpResponse(null, { status: 404 })
