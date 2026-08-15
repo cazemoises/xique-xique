@@ -49,7 +49,7 @@ export function BottomNav() {
   const { pathname } = useLocation()
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-30 mx-auto flex w-full max-w-md items-center justify-around border-t border-sand-border bg-white px-2 py-2.5 pb-6">
+    <nav className="fixed inset-x-0 bottom-0 z-30 mx-auto flex w-full max-w-md items-center justify-around border-t border-sand-border bg-white px-2 py-2.5 pb-6 lg:hidden">
       {TABS.map((tab) => {
         const active = tab.isActive(pathname)
         const item = (

@@ -37,6 +37,10 @@
   --text-xl: 1.0625rem;
   --text-2xl: 1.3125rem;
   --text-3xl: 1.6875rem;
+  /* Papel extra p/ hero de desktop (título grande) — não existia até a
+     versão desktop desenhada, telas mobile não precisam de nada maior
+     que --text-3xl. */
+  --text-4xl: 2.625rem;
 
   /* Sombras nomeadas — antes cada tela tinha rgba() hand-typed no JSX,
      3 delas duplicando o mesmo valor por cópia manual. */
