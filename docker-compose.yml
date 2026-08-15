@@ -1,0 +1,11 @@
+services:
+  frontend:
+    build: .
+    container_name: xiquexique-frontend
+    restart: unless-stopped
+    networks:
+      - shared-services
+
+networks:
+  shared-services:
+    external: true

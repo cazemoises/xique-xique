@@ -1,0 +1,128 @@
+import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Screen } from '../components/Screen'
+import { PlaceholderPhoto } from '../components/PlaceholderPhoto'
+import { useAsync } from '../hooks/useAsync'
+import { buscarProdutos } from '../services/produtos'
+import { formatPrice } from '../lib/formatPrice'
+import type { OfertaProduto } from '../domain/produto'
+
+export function ProductSearch() {
+  const [query, setQuery] = useState('vestido de festa')
+  const [mesmaFeiraOnly, setMesmaFeiraOnly] = useState(false)
+  const { data: ofertas } = useAsync(() => buscarProdutos({ q: query }), [query])
+
+  const poloDoMaisBarato = ofertas?.[0]?.poloId
+  const mesmaFeira = useMemo(() => ofertas?.filter((o) => o.poloId === poloDoMaisBarato) ?? [], [ofertas, poloDoMaisBarato])
+  const outrasFeiras = useMemo(() => ofertas?.filter((o) => o.poloId !== poloDoMaisBarato) ?? [], [ofertas, poloDoMaisBarato])
+  const bancasEnvolvidas = new Set(ofertas?.map((o) => o.banca.id)).size
+
+  return (
+    <Screen>
+      <div className="bg-ink px-4 pb-3 pt-7.5">
+        <div className="flex items-center gap-2.5 rounded-2xl bg-[#3A2B24] px-3.5 py-2.75">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9B7A8" strokeWidth="2.2" strokeLinecap="round">
+            <circle cx="11" cy="11" r="7" />
+            <path d="M20 20l-4-4" />
+          </svg>
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="flex-1 bg-transparent text-[13.5px] text-white outline-none placeholder:text-[#9B8574]"
+            placeholder="Buscar peça"
+          />
+        </div>
+        <div className="mt-2.75 flex flex-wrap gap-1.75">
+          <span className="rounded-full bg-ocre px-2.75 py-2 text-[11.5px] font-semibold text-ink">Tam. M ×</span>
+          <span className="rounded-full bg-[#3A2B24] px-2.75 py-2 text-[11.5px] font-medium text-[#E3D6CA]">Até R$ 150</span>
+          <button
+            type="button"
+            onClick={() => setMesmaFeiraOnly((v) => !v)}
+            className={`flex items-center gap-1.25 rounded-full px-2.75 py-2 text-[11.5px] font-semibold ${
+              mesmaFeiraOnly ? 'bg-ocre text-ink' : 'bg-[#3A2B24] text-[#E3D6CA]'
+            }`}
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 9l2-5h14l2 5" />
+              <path d="M4 9h16v11H4z" />
+            </svg>
+            Mesma feira
+          </button>
+          <span className="rounded-full bg-[#3A2B24] px-2.75 py-2 text-[11.5px] font-medium text-[#E3D6CA]">Filtros</span>
+        </div>
+      </div>
+
+      <div className="flex items-baseline justify-between px-4 pb-1 pt-3.5">
+        <span className="text-xs text-muted-2">
+          <strong className="font-bold text-ink">
+            {mesmaFeiraOnly
+              ? `${mesmaFeira.length} ofertas · mesma feira`
+              : `${ofertas?.length ?? 0} ofertas de ${bancasEnvolvidas} bancas`}
+          </strong>
+        </span>
+        <span className="text-xs font-semibold text-terracota">Menor preço ▾</span>
+      </div>
+
+      <div className="flex flex-1 flex-col gap-2.5 px-4 pt-2">
+        {mesmaFeira.length > 0 && (
+          <>
+            <div className="flex items-center gap-2 px-0.5">
+              <span className="rounded-full bg-oliva px-2 py-1.25 text-[9px] font-bold tracking-wide text-white">
+                MESMA FEIRA · 1 ENTREGA
+              </span>
+              <span className="text-[11px] text-muted-2">{mesmaFeira[0]?.poloNome}</span>
+            </div>
+            {mesmaFeira.map((oferta) => (
+              <OfertaCard key={oferta.produto.id} oferta={oferta} />
+            ))}
+          </>
+        )}
+
+        {!mesmaFeiraOnly && outrasFeiras.length > 0 && (
+          <>
+            <div className="flex items-center gap-2 px-0.5 pt-2.5">
+              <span className="rounded-full bg-sand-chip px-2 py-1.25 text-[9px] font-bold tracking-wide text-[#5C4A3D]">
+                OUTRAS FEIRAS
+              </span>
+              <span className="text-[11px] text-muted-2">gera entrega separada</span>
+            </div>
+            {outrasFeiras.map((oferta) => (
+              <OfertaCard key={oferta.produto.id} oferta={oferta} />
+            ))}
+          </>
+        )}
+        <div className="h-5" />
+      </div>
+    </Screen>
+  )
+}
+
+function OfertaCard({ oferta }: { oferta: OfertaProduto }) {
+  return (
+    <Link
+      to={`/produto/${oferta.produto.id}`}
+      className="flex gap-3 rounded-2xl border border-sand-border bg-white p-2.75"
+    >
+      <PlaceholderPhoto label="foto peça" className="h-26 w-21.5 flex-none rounded-2xl" />
+      <div className="flex min-w-0 flex-1 flex-col gap-1.25">
+        {oferta.badge && (
+          <span className="self-start rounded-full bg-ocre px-1.75 py-1 text-[9px] font-bold tracking-wide text-ink">
+            {oferta.badge === 'MENOR_PRECO' ? 'MENOR PREÇO' : 'MESMA ENTREGA'}
+          </span>
+        )}
+        <span className="text-[13px] leading-snug">{oferta.produto.nome}</span>
+        <div className="flex items-baseline gap-1.75">
+          <span className="font-display text-lg font-bold text-ink">{formatPrice(oferta.produto.preco)}</span>
+          {oferta.produto.precoAntigo && (
+            <span className="text-[11.5px] text-[#A8968A] line-through">{formatPrice(oferta.produto.precoAntigo)}</span>
+          )}
+        </div>
+        <span className="text-[11.5px] text-muted-2">
+          {oferta.banca.nome} · ★ {oferta.banca.rating.toFixed(1).replace('.', ',')}
+        </span>
+        <span className="text-[11.5px] font-medium text-oliva">{oferta.entregaLabel}</span>
+        <span className="text-[10.5px] text-muted-2">Tamanhos: {oferta.produto.tamanhos.join(', ')}</span>
+      </div>
+    </Link>
+  )
+}
