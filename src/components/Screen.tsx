@@ -10,7 +10,7 @@ export function Screen({ children, variant = 'card' }: ScreenProps) {
   if (variant === 'wide') {
     return (
       <div className="min-h-screen bg-sand lg:bg-cream">
-        <div className="mx-auto flex min-h-screen w-full max-w-[480px] flex-col bg-cream text-ink md:max-w-5xl xl:max-w-7xl lg:max-w-none">
+        <div className="mx-auto flex min-h-screen w-full max-w-[480px] flex-col bg-cream text-ink md:max-w-5xl lg:max-w-none">
           {children}
         </div>
         <BottomNav />

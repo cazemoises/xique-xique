@@ -129,7 +129,7 @@ export function SellerNewProduct() {
         </button>
       </div>
 
-      <div className="mx-auto hidden w-full max-w-245 flex-1 gap-9 px-8 py-10 lg:grid lg:grid-cols-[1fr_22.5rem] lg:items-start">
+      <div className="mx-auto hidden w-full max-w-page-narrow flex-1 gap-9 px-8 py-10 lg:grid lg:grid-cols-[1fr_22.5rem] lg:items-start">
         <div className="flex flex-col gap-5.5">
           {publicado && (
             <div className="rounded-2xl bg-verified-bg px-4 py-3.5 text-sm font-medium text-oliva">

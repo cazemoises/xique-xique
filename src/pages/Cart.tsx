@@ -176,7 +176,7 @@ export function Cart() {
         </div>
       )}
 
-      <div className="mx-auto hidden w-full max-w-270 flex-1 gap-7 px-8 py-11 lg:grid lg:grid-cols-[1fr_25rem] lg:items-start">
+      <div className="mx-auto hidden w-full max-w-page-narrow flex-1 gap-7 px-8 py-11 lg:grid lg:grid-cols-[1fr_25rem] lg:items-start">
         {itens.length === 0 && (
           <p className="col-span-2 mt-10 text-center text-sm text-muted-2">Sua sacola está vazia.</p>
         )}

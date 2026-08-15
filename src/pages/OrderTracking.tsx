@@ -184,7 +184,7 @@ export function OrderTracking() {
           </div>
         </div>
 
-        <div className="relative bg-sand">
+        <div className="relative border-l border-sand-border bg-sand shadow-[inset_0_0_28px_rgba(36,26,22,0.08)]">
           <div className="absolute inset-x-6 top-6 flex items-center gap-3 rounded-2xl bg-white p-4 shadow-[0_10px_26px_rgba(36,26,22,0.14)]">
             <div className="h-10 w-10 flex-none rounded-full bg-ink" />
             <div className="flex flex-1 flex-col gap-0.5">

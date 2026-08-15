@@ -48,6 +48,17 @@
   --shadow-pill: 0 10px 24px rgba(140, 74, 58, 0.35);
   --shadow-accent-oliva: 0 6px 16px rgba(91, 107, 69, 0.24);
   --shadow-accent-ink: 0 6px 16px rgba(36, 26, 22, 0.2);
+
+  /* O corpo da página em telas grandes (lg:+) é edge-to-edge — sem teto de
+     largura, só padding lateral (px-12 nas 8 telas). Testamos um teto fixo
+     (1600px, depois 1800px) contra isso e o edge-to-edge ganhou: em
+     monitores ~1900px+ um teto sempre deixa faixa vazia dos dois lados.
+     --container-page-narrow é a exceção deliberada: usado só pelas 2 telas
+     de painel focado (Sacola, Painel da banca) — coluna 1fr + trilho fixo,
+     mesma largura que o design original definia pra essas telas
+     especificamente (~1080–1120px), pra não esticar o texto da lista/
+     formulário até virar espaço morto. */
+  --container-page-narrow: 70rem;
 }
 
 body {

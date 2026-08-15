@@ -125,8 +125,8 @@ export function Home() {
       </main>
 
       <main className="hidden flex-1 lg:block">
-        <div className="flex items-center gap-14 bg-sand px-12 py-14">
-          <div className="flex max-w-140 flex-1 flex-col gap-4.5">
+        <div className="grid grid-cols-[minmax(20rem,40rem)_1fr] items-center gap-14 bg-sand px-12 py-14">
+          <div className="flex flex-col gap-4.5">
             <h1 className="m-0 text-pretty font-display text-4xl font-extrabold leading-tight text-ink">
               Roupa de feira, entregue na sua porta
             </h1>
@@ -156,7 +156,7 @@ export function Home() {
               ))}
             </div>
           </div>
-          <div className="grid h-96 max-w-130 flex-1 grid-cols-2 grid-rows-2 gap-3.5">
+          <div className="grid h-96 grid-cols-2 grid-rows-2 gap-3.5">
             <PlaceholderPhoto
               label="foto feira"
               src={marketImage('home-hero-feira')}
