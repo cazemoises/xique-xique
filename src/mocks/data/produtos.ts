@@ -1,8 +1,8 @@
 import type { Produto } from '../../domain/produto'
-import { placeholderImage } from './placeholderImage'
+import { produtoImage } from './curatedImage'
 
 function fotoDoProduto(id: string) {
-  return [placeholderImage(id, 500, 650)]
+  return [produtoImage(id)]
 }
 
 export const produtos: Produto[] = [

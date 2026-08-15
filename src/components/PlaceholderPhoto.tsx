@@ -17,7 +17,7 @@ export function PlaceholderPhoto({ label = 'foto', tone = 'light', className = '
 
   return (
     <div className={`relative flex items-end justify-center overflow-hidden ${stripes} ${className}`}>
-      <span className="mb-1.5 rounded bg-cream/90 px-1.5 py-0.5 font-mono text-[7.5px] text-[#8A6F52]">
+      <span className="mb-1.5 rounded bg-cream/90 px-1.5 py-0.5 font-mono text-[7.5px] text-muted-2">
         {label}
       </span>
     </div>

@@ -30,7 +30,7 @@ export function VendorsNearby() {
             <span
               key={filtro}
               className={`flex-none rounded-full px-3 py-2 text-xs font-medium ${
-                i === 0 ? 'bg-ink text-white font-semibold' : 'bg-sand-chip text-[#5C4A3D]'
+                i === 0 ? 'bg-ink text-white font-semibold' : 'bg-sand-chip text-muted-3'
               }`}
             >
               {filtro}
@@ -39,7 +39,7 @@ export function VendorsNearby() {
         </div>
       </div>
 
-      <div className="flex-1 px-4 pt-3.5 md:px-10">
+      <div className="flex-1 px-4 pt-3.5 pb-24 md:px-10">
         <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2 md:gap-4 lg:grid-cols-3">
           {bancas?.map((banca) => (
             <Link
@@ -50,18 +50,18 @@ export function VendorsNearby() {
               <PlaceholderPhoto label="logo banca" src={banca.fotoLogoUrl} className="h-18 w-18 flex-none rounded-2xl" />
               <div className="flex min-w-0 flex-1 flex-col gap-1">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[14.5px] font-bold leading-tight">{banca.nome}</span>
+                  <span className="text-lg font-bold leading-tight">{banca.nome}</span>
                   {banca.verificada && <VerifiedBadge onClick={() => setVerificadaAberta(true)} />}
                 </div>
-                <span className="text-[11.5px] leading-snug text-muted-2">{banca.categorias.join(' · ')}</span>
-                <div className="flex items-center gap-2 text-[11.5px] font-medium text-[#5C4A3D]">
+                <span className="text-xs leading-snug text-muted-2">{banca.categorias.join(' · ')}</span>
+                <div className="flex items-center gap-2 text-xs font-medium text-muted-3">
                   <span className="text-terracota">★ {banca.rating.toFixed(1).replace('.', ',')}</span>
                   <span className="text-sand-border">·</span>
                   <span>{banca.distanciaKm} km</span>
                   <span className="text-sand-border">·</span>
                   <span>{formatEta(banca.etaMinutos)}</span>
                 </div>
-                <span className="text-[11px] font-medium text-muted">{banca.taxaEntregaLabel}</span>
+                <span className="text-xs font-medium text-muted">{banca.taxaEntregaLabel}</span>
               </div>
             </Link>
           ))}
@@ -73,8 +73,8 @@ export function VendorsNearby() {
             <circle cx="12" cy="10" r="2.4" />
           </svg>
           <div className="flex flex-1 flex-col gap-0.5">
-            <span className="font-display text-[13.5px] font-bold leading-tight">Ver bancas no mapa da feira</span>
-            <span className="text-[11px] opacity-80">Parque 18 de Maio · corredores A–J</span>
+            <span className="font-display text-base font-bold leading-tight">Ver bancas no mapa da feira</span>
+            <span className="text-xs opacity-80">Parque 18 de Maio · corredores A–J</span>
           </div>
         </div>
       </div>

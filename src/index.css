@@ -10,16 +10,40 @@
   --color-ocre: #c08a3e;
   --color-oliva: #5b6b45;
   --color-ink: #241a16;
+  --color-ink-2: #3a2b24;
 
   --color-cream: #fbf2e4;
   --color-sand: #f0e4ce;
+  --color-sand-2: #e3d6ca;
   --color-sand-border: #efe1d1;
   --color-sand-chip: #f1e3d3;
   --color-verified-bg: #eeebd9;
 
   --color-muted: #6b5a4e;
   --color-muted-2: #8a7565;
+  --color-muted-3: #5c4a3d;
   --color-placeholder: #9b8574;
+  --color-faded: #a8968a;
+
+  /* Escala tipográfica — substitui a escala padrão do Tailwind (não usada
+     em nenhum lugar do app antes desta consolidação). Cada tela usava
+     dezenas de tamanhos px arbitrários para os mesmos papéis; isto define
+     8 papéis fixos, do menor badge ao preço em destaque. */
+  --text-2xs: 0.625rem;
+  --text-xs: 0.6875rem;
+  --text-sm: 0.78125rem;
+  --text-base: 0.84375rem;
+  --text-lg: 0.90625rem;
+  --text-xl: 1.0625rem;
+  --text-2xl: 1.3125rem;
+  --text-3xl: 1.6875rem;
+
+  /* Sombras nomeadas — antes cada tela tinha rgba() hand-typed no JSX,
+     3 delas duplicando o mesmo valor por cópia manual. */
+  --shadow-cta: 0 8px 18px rgba(140, 74, 58, 0.3);
+  --shadow-pill: 0 10px 24px rgba(140, 74, 58, 0.35);
+  --shadow-accent-oliva: 0 6px 16px rgba(91, 107, 69, 0.24);
+  --shadow-accent-ink: 0 6px 16px rgba(36, 26, 22, 0.2);
 }
 
 body {

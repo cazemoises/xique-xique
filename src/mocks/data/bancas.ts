@@ -1,10 +1,10 @@
 import type { Banca } from '../../domain/banca'
-import { placeholderImage } from './placeholderImage'
+import { bancaImage, logoImage } from './curatedImage'
 
 function fotosDaBanca(id: string) {
   return {
-    fotoCapaUrl: placeholderImage(`${id}-capa`, 800, 400),
-    fotoLogoUrl: placeholderImage(`${id}-logo`, 200, 200),
+    fotoCapaUrl: bancaImage(id),
+    fotoLogoUrl: logoImage(id),
   }
 }
 

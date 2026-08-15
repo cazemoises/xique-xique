@@ -52,17 +52,17 @@ export function ProductDetail() {
 
       <div className="flex-1 px-5 pt-4.5">
         {produto.precoAntigo && (
-          <span className="rounded-full bg-ocre px-1.75 py-1 text-[9px] font-bold tracking-wide text-ink">
+          <span className="rounded-full bg-ocre px-1.75 py-1 text-2xs font-bold tracking-wide text-ink">
             MENOR PREÇO DA BUSCA
           </span>
         )}
-        <h2 className="mb-0 mt-2.5 font-display text-[22px] font-bold leading-snug">{produto.nome}</h2>
+        <h2 className="mb-0 mt-2.5 font-display text-2xl font-bold leading-snug">{produto.nome}</h2>
         <div className="mt-2 flex items-baseline gap-2.25">
-          <span className="font-display text-[27px] font-bold text-terracota">{formatPrice(produto.preco)}</span>
+          <span className="font-display text-3xl font-bold text-terracota">{formatPrice(produto.preco)}</span>
           {produto.precoAntigo && (
-            <span className="text-[13px] text-[#A8968A] line-through">{formatPrice(produto.precoAntigo)}</span>
+            <span className="text-sm text-faded line-through">{formatPrice(produto.precoAntigo)}</span>
           )}
-          <span className="text-[11px] font-semibold text-oliva">3× de {formatPrice(produto.preco / 3)}</span>
+          <span className="text-xs font-semibold text-oliva">3× de {formatPrice(produto.preco / 3)}</span>
         </div>
 
         <Link
@@ -71,23 +71,23 @@ export function ProductDetail() {
         >
           <PlaceholderPhoto label="" src={banca.fotoLogoUrl} className="h-11 w-11 rounded-xl" />
           <div className="flex flex-1 flex-col gap-0.5">
-            <span className="text-[13.5px] font-bold leading-tight">{banca.nome}</span>
-            <span className="text-[11px] text-muted-2">
+            <span className="text-base font-bold leading-tight">{banca.nome}</span>
+            <span className="text-xs text-muted-2">
               ★ {banca.rating.toFixed(1).replace('.', ',')} · {banca.distanciaKm} km
               {banca.corredor && ` · ${banca.corredor}`}
             </span>
           </div>
-          <span className="rounded-full bg-verified-bg px-2.75 py-2 text-[11.5px] font-semibold text-oliva">Ver banca</span>
+          <span className="rounded-full bg-verified-bg px-2.75 py-2 text-xs font-semibold text-oliva">Ver banca</span>
         </Link>
 
-        <p className="mb-2.25 mt-5 text-[13.5px] font-bold">Tamanho</p>
+        <p className="mb-2.25 mt-5 text-base font-bold">Tamanho</p>
         <div className="flex gap-2.25">
           {produto.tamanhos.map((s) => (
             <button
               key={s}
               type="button"
               onClick={() => setTamanho(s)}
-              className={`min-w-12 rounded-xl border-[1.5px] py-2.75 text-center text-[13.5px] font-semibold ${
+              className={`min-w-12 rounded-xl border-[1.5px] py-2.75 text-center text-base font-semibold ${
                 s === tamanhoAtual ? 'border-ink bg-ink text-white' : 'border-sand-border bg-white text-ink'
               }`}
             >
@@ -95,7 +95,7 @@ export function ProductDetail() {
             </button>
           ))}
         </div>
-        {medida && <p className="mb-0 mt-2.25 text-[11.5px] leading-snug text-muted-2">Tamanho {tamanhoAtual} — {medida}.</p>}
+        {medida && <p className="mb-0 mt-2.25 text-xs leading-snug text-muted-2">Tamanho {tamanhoAtual} — {medida}.</p>}
 
         <div className="mt-4.5 flex flex-col gap-2.25 rounded-2xl border border-sand-border bg-white p-3.5">
           <div className="flex items-center gap-2.5">
@@ -104,7 +104,7 @@ export function ProductDetail() {
               <circle cx="7" cy="18" r="2" />
               <circle cx="17" cy="18" r="2" />
             </svg>
-            <span className="text-[12.5px] font-medium leading-snug">
+            <span className="text-sm font-medium leading-snug">
               Chega hoje, entre 17h e 19h · <strong>{banca.taxaEntregaLabel}</strong>
             </span>
           </div>
@@ -113,7 +113,7 @@ export function ProductDetail() {
               <path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z" />
               <path d="M9 12l2 2 4-4" />
             </svg>
-            <span className="text-[12.5px] font-medium leading-snug">
+            <span className="text-sm font-medium leading-snug">
               Troca em até 48h por defeito de fabricação ou erro de medida · solicite pelo app
             </span>
           </div>
@@ -123,7 +123,7 @@ export function ProductDetail() {
 
       <div className="fixed inset-x-0 bottom-0 z-30 mx-auto flex w-full max-w-[480px] items-center gap-3 border-t border-sand-border bg-white px-4.5 py-3.5 pb-7.5 md:sticky md:inset-x-auto">
         <div className="flex items-center gap-3.5 rounded-2xl border-[1.5px] border-sand-border px-3.25 py-2.75 text-sm font-semibold">
-          <button type="button" onClick={() => setQuantidade((q) => Math.max(1, q - 1))} className="text-[#B0A093]">
+          <button type="button" onClick={() => setQuantidade((q) => Math.max(1, q - 1))} className="text-faded">
             −
           </button>
           <span>{quantidade}</span>
@@ -134,7 +134,7 @@ export function ProductDetail() {
         <button
           type="button"
           onClick={adicionarAoCarrinho}
-          className="flex-1 rounded-2xl bg-terracota py-3.75 text-center text-[14.5px] font-bold text-white shadow-[0_8px_18px_rgba(140,74,58,0.3)]"
+          className="flex-1 rounded-2xl bg-terracota py-3.75 text-center text-lg font-bold text-white shadow-cta"
         >
           Adicionar · {formatPrice(produto.preco * quantidade)}
         </button>

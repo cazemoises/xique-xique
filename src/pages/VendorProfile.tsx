@@ -50,7 +50,7 @@ export function VendorProfile() {
 
       <div className="border-b border-sand-border bg-white px-4.5 pb-3.5 pt-3.5 md:px-10">
         <div className="flex items-center gap-1.5">
-          <h2 className="m-0 font-display text-[21px] font-bold">{banca.nome}</h2>
+          <h2 className="m-0 font-display text-2xl font-bold">{banca.nome}</h2>
           {banca.verificada && <VerifiedBadge onClick={() => setVerificadaAberta(true)} />}
         </div>
         <p className="mt-1.5 mb-0 text-xs text-muted-2">
@@ -71,7 +71,7 @@ export function VendorProfile() {
         {abas.map((aba, i) => (
           <span
             key={aba}
-            className={`pb-2.5 ${i === 0 ? 'border-b-[2.5px] border-terracota' : 'text-[#A8968A]'}`}
+            className={`pb-2.5 ${i === 0 ? 'border-b-[2.5px] border-terracota' : 'text-faded'}`}
           >
             {aba}
           </span>
@@ -79,7 +79,7 @@ export function VendorProfile() {
       </div>
 
       <div className="flex-1 px-4 pt-4 md:px-10">
-        <div className="grid grid-cols-2 gap-3 pb-24 md:grid-cols-3 md:gap-4 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 pb-44 md:grid-cols-3 md:gap-4 lg:grid-cols-4">
           {catalogo?.map((produto) => (
             <Link
               key={produto.id}
@@ -89,8 +89,8 @@ export function VendorProfile() {
               <PlaceholderPhoto label="foto peça" src={produto.fotos[0]} className="h-29.5 w-full" />
               <div className="flex flex-col gap-0.5 px-2.5 py-2.5">
                 <span className="text-xs leading-snug">{produto.nome}</span>
-                <span className="text-[14.5px] font-bold">{formatPrice(produto.preco)}</span>
-                <span className="text-[10.5px] text-muted-2">{produto.tamanhos.join(' · ')}</span>
+                <span className="text-lg font-bold">{formatPrice(produto.preco)}</span>
+                <span className="text-2xs text-muted-2">{produto.tamanhos.join(' · ')}</span>
               </div>
             </Link>
           ))}
@@ -100,12 +100,12 @@ export function VendorProfile() {
       {itensDestaBanca.length > 0 && (
         <Link
           to="/sacola"
-          className="fixed inset-x-4 bottom-8.5 z-30 mx-auto flex max-w-[416px] items-center justify-between rounded-2xl bg-terracota px-4.5 py-3.5 text-white shadow-[0_10px_24px_rgba(140,74,58,0.35)]"
+          className="fixed inset-x-4 bottom-24 z-30 mx-auto flex max-w-[416px] items-center justify-between rounded-2xl bg-terracota px-4.5 py-3.5 text-white shadow-pill"
         >
-          <span className="text-[13.5px] font-semibold">
+          <span className="text-base font-semibold">
             {itensDestaBanca.length} {itensDestaBanca.length === 1 ? 'peça' : 'peças'} na sacola
           </span>
-          <span className="text-[14.5px] font-bold">Ver sacola · {formatPrice(totalNaSacola)}</span>
+          <span className="text-lg font-bold">Ver sacola · {formatPrice(totalNaSacola)}</span>
         </Link>
       )}
 

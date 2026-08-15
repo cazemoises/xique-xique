@@ -24,7 +24,7 @@ export function TopBar({ title, subtitle, onBack }: TopBarProps) {
       </button>
       <div className="flex flex-col gap-0.5">
         <span className="font-display text-lg font-bold leading-none">{title}</span>
-        {subtitle && <span className="text-[11px] leading-tight text-muted-2">{subtitle}</span>}
+        {subtitle && <span className="text-xs leading-tight text-muted-2">{subtitle}</span>}
       </div>
     </div>
   )

@@ -20,13 +20,13 @@ export function VerifiedInfoSheet({ onClose }: VerifiedInfoSheetProps) {
               <path d="M9 12l2 2 4-4" />
             </svg>
           </div>
-          <span className="font-display text-[16.5px] font-bold leading-tight">O que é uma banca verificada?</span>
+          <span className="font-display text-xl font-bold leading-tight">O que é uma banca verificada?</span>
         </div>
-        <p className="m-0 text-[13px] leading-relaxed text-muted">
+        <p className="m-0 text-sm leading-relaxed text-muted">
           O Xique-Xique confirmou o documento do feirante e o ponto físico dele na feira. Não é
           garantia de qualidade da peça — é garantia de que essa banca existe e é quem diz ser.
         </p>
-        <div className="mt-1.5 rounded-2xl bg-[#F6EFE6] p-3.5 text-[12.5px] leading-relaxed text-muted">
+        <div className="mt-1.5 rounded-2xl bg-sand-chip p-3.5 text-sm leading-relaxed text-muted">
           Bancas sem o selo ainda podem vender normalmente — a verificação está em andamento com
           elas.
         </div>

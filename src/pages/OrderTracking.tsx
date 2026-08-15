@@ -31,7 +31,7 @@ export function OrderTracking() {
 
       <div className="flex-1 px-5 pt-5">
         <div className="flex flex-col gap-0.75 rounded-2xl bg-oliva p-4 text-white">
-          <span className="font-display text-[15px] font-bold leading-tight">{STATUS_LABEL[pedido.status]}</span>
+          <span className="font-display text-lg font-bold leading-tight">{STATUS_LABEL[pedido.status]}</span>
           <span className="text-xs leading-snug opacity-85">
             Chega entre 17h e 19h · motoboy da banca
           </span>
@@ -59,17 +59,17 @@ export function OrderTracking() {
                   )}
                 </div>
                 <div className="flex flex-col gap-0.5 pb-5.5">
-                  <span className={`text-[13.5px] font-bold leading-tight ${etapa.concluida ? 'text-ink' : 'text-muted-2'}`}>
+                  <span className={`text-base font-bold leading-tight ${etapa.concluida ? 'text-ink' : 'text-muted-2'}`}>
                     {etapa.label}
                   </span>
-                  <span className="text-[11px] text-muted-2">{etapa.horario}</span>
+                  <span className="text-xs text-muted-2">{etapa.horario}</span>
                 </div>
               </div>
             )
           })}
         </div>
 
-        <p className="mb-2.25 mt-1.5 text-[13.5px] font-bold">Falar com a banca</p>
+        <p className="mb-2.25 mt-1.5 text-base font-bold">Falar com a banca</p>
         <div className="flex flex-col gap-2.5 rounded-2xl border border-sand-border bg-white p-3">
           {mensagens.length === 0 && (
             <p className="m-0 text-xs text-muted-2">Nenhuma mensagem ainda.</p>
@@ -77,7 +77,7 @@ export function OrderTracking() {
           {mensagens.map((msg, i) => (
             <div
               key={i}
-              className={`max-w-[80%] rounded-xl px-3 py-2.25 text-[12.5px] leading-snug ${
+              className={`max-w-[80%] rounded-xl px-3 py-2.25 text-sm leading-snug ${
                 msg.autor === 'comprador'
                   ? 'self-end rounded-br-[3px] bg-sand-chip text-ink'
                   : 'self-start rounded-bl-[3px] bg-verified-bg text-oliva'
@@ -91,7 +91,7 @@ export function OrderTracking() {
       </div>
 
       <div className="fixed inset-x-0 bottom-0 z-30 mx-auto flex w-full max-w-[480px] items-center gap-2.5 border-t border-sand-border bg-white px-4 py-3 pb-7.5 md:sticky md:inset-x-auto">
-        <div className="flex-1 rounded-full bg-[#F6EFE6] px-4 py-3 text-[13px] text-placeholder">
+        <div className="flex-1 rounded-full bg-sand-chip px-4 py-3 text-sm text-placeholder">
           Escreva uma mensagem…
         </div>
         <button

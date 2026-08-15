@@ -1,5 +1,5 @@
 import type { Polo } from '../../domain/polo'
-import { placeholderImage } from './placeholderImage'
+import { marketImage } from './curatedImage'
 
 export const polos: Polo[] = [
   {
@@ -8,7 +8,7 @@ export const polos: Polo[] = [
     endereco: 'Parque 18 de Maio, Caruaru — PE',
     bancasCount: 312,
     abertoAte: '20h',
-    fotoUrl: placeholderImage('polo-parque-18', 600, 400),
+    fotoUrl: marketImage('polo-parque-18'),
   },
   {
     id: 'polo-sulanca',
@@ -16,6 +16,6 @@ export const polos: Polo[] = [
     endereco: 'Feira da Sulanca, Caruaru — PE',
     bancasCount: 180,
     abertoAte: '14h',
-    fotoUrl: placeholderImage('polo-sulanca', 600, 400),
+    fotoUrl: marketImage('polo-sulanca'),
   },
 ]
