@@ -90,7 +90,7 @@ export function OrderTracking() {
         <div className="mt-5 h-17.5" />
       </div>
 
-      <div className="fixed inset-x-0 bottom-0 z-30 mx-auto flex w-full max-w-[480px] items-center gap-2.5 border-t border-sand-border bg-white px-4 py-3 pb-7.5">
+      <div className="fixed inset-x-0 bottom-0 z-30 mx-auto flex w-full max-w-[480px] items-center gap-2.5 border-t border-sand-border bg-white px-4 py-3 pb-7.5 md:sticky md:inset-x-auto">
         <div className="flex-1 rounded-full bg-[#F6EFE6] px-4 py-3 text-[13px] text-placeholder">
           Escreva uma mensagem…
         </div>

@@ -15,8 +15,8 @@ export function VendorsNearby() {
   const [verificadaAberta, setVerificadaAberta] = useState(false)
 
   return (
-    <Screen>
-      <div className="relative border-b border-sand-border bg-white px-5 pt-8 pb-3.5">
+    <Screen variant="wide">
+      <div className="relative border-b border-sand-border bg-white px-5 pt-8 pb-3.5 md:px-10">
         <div className="flex items-center gap-3">
           <Link to="/" aria-label="Voltar">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#241A16" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -39,31 +39,33 @@ export function VendorsNearby() {
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col gap-2.5 px-4 pt-3.5">
-        {bancas?.map((banca) => (
-          <Link
-            key={banca.id}
-            to={`/banca/${banca.id}`}
-            className="flex items-center gap-3 rounded-2xl border border-sand-border bg-white p-3"
-          >
-            <PlaceholderPhoto label="logo banca" className="h-18 w-18 flex-none rounded-2xl" />
-            <div className="flex min-w-0 flex-1 flex-col gap-1">
-              <div className="flex items-center gap-1.5">
-                <span className="text-[14.5px] font-bold leading-tight">{banca.nome}</span>
-                {banca.verificada && <VerifiedBadge onClick={() => setVerificadaAberta(true)} />}
+      <div className="flex-1 px-4 pt-3.5 md:px-10">
+        <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2 md:gap-4 lg:grid-cols-3">
+          {bancas?.map((banca) => (
+            <Link
+              key={banca.id}
+              to={`/banca/${banca.id}`}
+              className="flex items-center gap-3 rounded-2xl border border-sand-border bg-white p-3"
+            >
+              <PlaceholderPhoto label="logo banca" src={banca.fotoLogoUrl} className="h-18 w-18 flex-none rounded-2xl" />
+              <div className="flex min-w-0 flex-1 flex-col gap-1">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[14.5px] font-bold leading-tight">{banca.nome}</span>
+                  {banca.verificada && <VerifiedBadge onClick={() => setVerificadaAberta(true)} />}
+                </div>
+                <span className="text-[11.5px] leading-snug text-muted-2">{banca.categorias.join(' · ')}</span>
+                <div className="flex items-center gap-2 text-[11.5px] font-medium text-[#5C4A3D]">
+                  <span className="text-terracota">★ {banca.rating.toFixed(1).replace('.', ',')}</span>
+                  <span className="text-sand-border">·</span>
+                  <span>{banca.distanciaKm} km</span>
+                  <span className="text-sand-border">·</span>
+                  <span>{formatEta(banca.etaMinutos)}</span>
+                </div>
+                <span className="text-[11px] font-medium text-muted">{banca.taxaEntregaLabel}</span>
               </div>
-              <span className="text-[11.5px] leading-snug text-muted-2">{banca.categorias.join(' · ')}</span>
-              <div className="flex items-center gap-2 text-[11.5px] font-medium text-[#5C4A3D]">
-                <span className="text-terracota">★ {banca.rating.toFixed(1).replace('.', ',')}</span>
-                <span className="text-sand-border">·</span>
-                <span>{banca.distanciaKm} km</span>
-                <span className="text-sand-border">·</span>
-                <span>{formatEta(banca.etaMinutos)}</span>
-              </div>
-              <span className="text-[11px] font-medium text-muted">{banca.taxaEntregaLabel}</span>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          ))}
+        </div>
 
         <div className="my-1.5 mb-4.5 flex items-center gap-3 rounded-2xl bg-oliva p-4 text-white">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C08A3E" strokeWidth="2" strokeLinecap="round">

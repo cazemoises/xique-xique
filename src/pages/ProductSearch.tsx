@@ -18,9 +18,9 @@ export function ProductSearch() {
   const bancasEnvolvidas = new Set(ofertas?.map((o) => o.banca.id)).size
 
   return (
-    <Screen>
-      <div className="bg-ink px-4 pb-3 pt-7.5">
-        <div className="flex items-center gap-2.5 rounded-2xl bg-[#3A2B24] px-3.5 py-2.75">
+    <Screen variant="wide">
+      <div className="bg-ink px-4 pb-3 pt-7.5 md:px-10">
+        <div className="flex items-center gap-2.5 rounded-2xl bg-[#3A2B24] px-3.5 py-2.75 md:max-w-md">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9B7A8" strokeWidth="2.2" strokeLinecap="round">
             <circle cx="11" cy="11" r="7" />
             <path d="M20 20l-4-4" />
@@ -52,7 +52,7 @@ export function ProductSearch() {
         </div>
       </div>
 
-      <div className="flex items-baseline justify-between px-4 pb-1 pt-3.5">
+      <div className="flex items-baseline justify-between px-4 pb-1 pt-3.5 md:px-10">
         <span className="text-xs text-muted-2">
           <strong className="font-bold text-ink">
             {mesmaFeiraOnly
@@ -63,7 +63,7 @@ export function ProductSearch() {
         <span className="text-xs font-semibold text-terracota">Menor preço ▾</span>
       </div>
 
-      <div className="flex flex-1 flex-col gap-2.5 px-4 pt-2">
+      <div className="flex-1 px-4 pt-2 md:px-10">
         {mesmaFeira.length > 0 && (
           <>
             <div className="flex items-center gap-2 px-0.5">
@@ -72,9 +72,11 @@ export function ProductSearch() {
               </span>
               <span className="text-[11px] text-muted-2">{mesmaFeira[0]?.poloNome}</span>
             </div>
-            {mesmaFeira.map((oferta) => (
-              <OfertaCard key={oferta.produto.id} oferta={oferta} />
-            ))}
+            <div className="mt-2.5 grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
+              {mesmaFeira.map((oferta) => (
+                <OfertaCard key={oferta.produto.id} oferta={oferta} />
+              ))}
+            </div>
           </>
         )}
 
@@ -86,9 +88,11 @@ export function ProductSearch() {
               </span>
               <span className="text-[11px] text-muted-2">gera entrega separada</span>
             </div>
-            {outrasFeiras.map((oferta) => (
-              <OfertaCard key={oferta.produto.id} oferta={oferta} />
-            ))}
+            <div className="mt-2.5 grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
+              {outrasFeiras.map((oferta) => (
+                <OfertaCard key={oferta.produto.id} oferta={oferta} />
+              ))}
+            </div>
           </>
         )}
         <div className="h-5" />
@@ -101,10 +105,14 @@ function OfertaCard({ oferta }: { oferta: OfertaProduto }) {
   return (
     <Link
       to={`/produto/${oferta.produto.id}`}
-      className="flex gap-3 rounded-2xl border border-sand-border bg-white p-2.75"
+      className="flex gap-3 rounded-2xl border border-sand-border bg-white p-2.75 sm:flex-col sm:gap-0 sm:overflow-hidden sm:p-0"
     >
-      <PlaceholderPhoto label="foto peça" className="h-26 w-21.5 flex-none rounded-2xl" />
-      <div className="flex min-w-0 flex-1 flex-col gap-1.25">
+      <PlaceholderPhoto
+        label="foto peça"
+        src={oferta.produto.fotos[0]}
+        className="h-26 w-21.5 flex-none rounded-2xl sm:h-40 sm:w-full sm:rounded-none"
+      />
+      <div className="flex min-w-0 flex-1 flex-col gap-1.25 sm:p-2.75">
         {oferta.badge && (
           <span className="self-start rounded-full bg-ocre px-1.75 py-1 text-[9px] font-bold tracking-wide text-ink">
             {oferta.badge === 'MENOR_PRECO' ? 'MENOR PREÇO' : 'MESMA ENTREGA'}

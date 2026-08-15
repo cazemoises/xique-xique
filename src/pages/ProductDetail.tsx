@@ -38,7 +38,7 @@ export function ProductDetail() {
   return (
     <Screen>
       <div className="relative">
-        <PlaceholderPhoto label="foto do produto 3:4" className="h-75" />
+        <PlaceholderPhoto label="foto do produto 3:4" src={produto.fotos[0]} className="h-75 w-full" />
         <Link
           to={`/banca/${banca.id}`}
           aria-label="Voltar"
@@ -69,7 +69,7 @@ export function ProductDetail() {
           to={`/banca/${banca.id}`}
           className="mt-4.5 flex items-center gap-2.75 rounded-2xl border border-sand-border bg-white p-3"
         >
-          <PlaceholderPhoto label="" className="h-11 w-11 rounded-xl" />
+          <PlaceholderPhoto label="" src={banca.fotoLogoUrl} className="h-11 w-11 rounded-xl" />
           <div className="flex flex-1 flex-col gap-0.5">
             <span className="text-[13.5px] font-bold leading-tight">{banca.nome}</span>
             <span className="text-[11px] text-muted-2">
@@ -121,7 +121,7 @@ export function ProductDetail() {
         <div className="h-30" />
       </div>
 
-      <div className="fixed inset-x-0 bottom-0 z-30 mx-auto flex w-full max-w-[480px] items-center gap-3 border-t border-sand-border bg-white px-4.5 py-3.5 pb-7.5">
+      <div className="fixed inset-x-0 bottom-0 z-30 mx-auto flex w-full max-w-[480px] items-center gap-3 border-t border-sand-border bg-white px-4.5 py-3.5 pb-7.5 md:sticky md:inset-x-auto">
         <div className="flex items-center gap-3.5 rounded-2xl border-[1.5px] border-sand-border px-3.25 py-2.75 text-sm font-semibold">
           <button type="button" onClick={() => setQuantidade((q) => Math.max(1, q - 1))} className="text-[#B0A093]">
             −

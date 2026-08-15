@@ -2,9 +2,14 @@ interface PlaceholderPhotoProps {
   label?: string
   tone?: 'light' | 'dark'
   className?: string
+  src?: string
 }
 
-export function PlaceholderPhoto({ label = 'foto', tone = 'light', className = '' }: PlaceholderPhotoProps) {
+export function PlaceholderPhoto({ label = 'foto', tone = 'light', className = '', src }: PlaceholderPhotoProps) {
+  if (src) {
+    return <img src={src} alt={label} className={`object-cover ${className}`} />
+  }
+
   const stripes =
     tone === 'light'
       ? 'bg-[repeating-linear-gradient(135deg,#F0E0CC_0_7px,#E6D2B9_7px_14px)]'

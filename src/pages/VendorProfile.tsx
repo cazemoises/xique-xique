@@ -25,9 +25,9 @@ export function VendorProfile() {
   if (!banca) return null
 
   return (
-    <Screen>
+    <Screen variant="wide">
       <div className="relative">
-        <PlaceholderPhoto label="foto da banca (capa)" className="h-37.5" />
+        <PlaceholderPhoto label="foto da banca (capa)" src={banca.fotoCapaUrl} className="h-37.5 w-full md:h-56" />
         <Link
           to="/bancas"
           aria-label="Voltar"
@@ -48,7 +48,7 @@ export function VendorProfile() {
         </button>
       </div>
 
-      <div className="border-b border-sand-border bg-white px-4.5 pb-3.5 pt-3.5">
+      <div className="border-b border-sand-border bg-white px-4.5 pb-3.5 pt-3.5 md:px-10">
         <div className="flex items-center gap-1.5">
           <h2 className="m-0 font-display text-[21px] font-bold">{banca.nome}</h2>
           {banca.verificada && <VerifiedBadge onClick={() => setVerificadaAberta(true)} />}
@@ -67,7 +67,7 @@ export function VendorProfile() {
         </div>
       </div>
 
-      <div className="flex gap-4.5 border-b border-sand-border bg-white px-4.5 pt-3 text-sm font-semibold">
+      <div className="flex gap-4.5 border-b border-sand-border bg-white px-4.5 pt-3 text-sm font-semibold md:px-10">
         {abas.map((aba, i) => (
           <span
             key={aba}
@@ -78,15 +78,15 @@ export function VendorProfile() {
         ))}
       </div>
 
-      <div className="flex-1 px-4 pt-4">
-        <div className="grid grid-cols-2 gap-3 pb-24">
+      <div className="flex-1 px-4 pt-4 md:px-10">
+        <div className="grid grid-cols-2 gap-3 pb-24 md:grid-cols-3 md:gap-4 lg:grid-cols-4">
           {catalogo?.map((produto) => (
             <Link
               key={produto.id}
               to={`/produto/${produto.id}`}
               className="flex flex-col overflow-hidden rounded-2xl border border-sand-border bg-white"
             >
-              <PlaceholderPhoto label="foto peça" className="h-29.5" />
+              <PlaceholderPhoto label="foto peça" src={produto.fotos[0]} className="h-29.5 w-full" />
               <div className="flex flex-col gap-0.5 px-2.5 py-2.5">
                 <span className="text-xs leading-snug">{produto.nome}</span>
                 <span className="text-[14.5px] font-bold">{formatPrice(produto.preco)}</span>

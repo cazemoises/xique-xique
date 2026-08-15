@@ -101,7 +101,7 @@ export function SellerNewProduct() {
         <div className="h-24" />
       </div>
 
-      <div className="fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-[480px] border-t border-sand-border bg-white px-4.5 py-3.5 pb-7.5">
+      <div className="fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-[480px] border-t border-sand-border bg-white px-4.5 py-3.5 pb-7.5 md:sticky md:inset-x-auto">
         <button
           type="button"
           onClick={() => setPublicado(true)}

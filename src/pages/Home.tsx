@@ -12,8 +12,8 @@ export function Home() {
   const [categoriaAtiva, setCategoriaAtiva] = useState(categorias[0])
 
   return (
-    <Screen>
-      <header className="rounded-b-3xl bg-gradient-to-b from-terracota to-barro px-5 pb-4.5 pt-8 text-white">
+    <Screen variant="wide">
+      <header className="rounded-b-3xl bg-gradient-to-b from-terracota to-barro px-5 pb-4.5 pt-8 text-white md:px-10 md:pb-8 md:pt-10">
         <div className="flex items-center justify-between gap-3">
           <div className="flex flex-col gap-0.5">
             <span className="text-[11px] font-medium uppercase tracking-wide opacity-80">Entregar em</span>
@@ -36,11 +36,11 @@ export function Home() {
         </Link>
       </header>
 
-      <main className="flex-1 px-5 pt-5">
-        <div className="grid grid-cols-2 gap-3">
+      <main className="flex-1 px-5 pt-5 md:px-10">
+        <div className="grid grid-cols-2 gap-3 md:gap-5">
           <Link
             to="/bancas"
-            className="flex flex-col gap-6.5 rounded-2xl bg-oliva p-3.5 pt-4 text-white shadow-[0_6px_16px_rgba(91,107,69,0.24)]"
+            className="flex flex-col gap-6.5 rounded-2xl bg-oliva p-3.5 pt-4 text-white shadow-[0_6px_16px_rgba(91,107,69,0.24)] md:p-5 md:pt-6"
           >
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C08A3E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M3 9l2-5h14l2 5" />
@@ -58,7 +58,7 @@ export function Home() {
           </Link>
           <Link
             to="/buscar"
-            className="flex flex-col gap-6.5 rounded-2xl bg-ink p-3.5 pt-4 text-white shadow-[0_6px_16px_rgba(36,26,22,0.2)]"
+            className="flex flex-col gap-6.5 rounded-2xl bg-ink p-3.5 pt-4 text-white shadow-[0_6px_16px_rgba(36,26,22,0.2)] md:p-5 md:pt-6"
           >
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C08A3E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M4 6h16M4 12h16M4 18h10" />
@@ -94,10 +94,10 @@ export function Home() {
           <h3 className="m-0 font-display text-[17px] font-bold">Feiras abertas agora</h3>
           <span className="text-xs font-medium text-terracota">ver todas</span>
         </div>
-        <div className="mt-3 flex gap-3">
+        <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-3 lg:grid-cols-4">
           {polos?.map((polo) => (
-            <div key={polo.id} className="flex-1 overflow-hidden rounded-2xl border border-sand-border bg-white">
-              <PlaceholderPhoto label="foto feira" className="h-19.5" />
+            <div key={polo.id} className="overflow-hidden rounded-2xl border border-sand-border bg-white">
+              <PlaceholderPhoto label="foto feira" src={polo.fotoUrl} className="h-19.5 w-full md:h-32" />
               <div className="flex flex-col gap-0.5 px-2.5 py-2.5">
                 <span className="text-[13px] font-bold leading-tight">{polo.nome}</span>
                 <span className="text-[11px] text-muted-2">
@@ -117,10 +117,10 @@ export function Home() {
           </div>
           <span className="flex-none rounded-full bg-ink px-3 py-2 text-[11.5px] font-semibold text-white">Usar</span>
         </div>
-        <div className="h-4" />
+        <div className="h-24" />
       </main>
 
-      <nav className="flex items-center justify-around border-t border-sand-border bg-white px-2 py-2.5 pb-6">
+      <nav className="fixed inset-x-0 bottom-0 z-30 mx-auto flex w-full max-w-md items-center justify-around border-t border-sand-border bg-white px-2 py-2.5 pb-6">
         <Link to="/" className="contents">
           <TabItem label="Início" active />
         </Link>

@@ -1,4 +1,9 @@
 import type { Produto } from '../../domain/produto'
+import { placeholderImage } from './placeholderImage'
+
+function fotoDoProduto(id: string) {
+  return [placeholderImage(id, 500, 650)]
+}
 
 export const produtos: Produto[] = [
   {
@@ -14,7 +19,7 @@ export const produtos: Produto[] = [
       M: 'busto 92 cm, comprimento 118 cm',
       G: 'busto 98 cm, comprimento 120 cm',
     },
-    fotos: [],
+    fotos: fotoDoProduto('produto-vestido-midi-vinho'),
   },
   {
     id: 'produto-vestido-longo-estampado',
@@ -23,7 +28,7 @@ export const produtos: Produto[] = [
     categoria: 'Vestidos',
     preco: 119.0,
     tamanhos: ['M', 'G', 'GG'],
-    fotos: [],
+    fotos: fotoDoProduto('produto-vestido-longo-estampado'),
   },
   {
     id: 'produto-blusa-cropped-canelada',
@@ -32,7 +37,7 @@ export const produtos: Produto[] = [
     categoria: 'Blusas',
     preco: 39.9,
     tamanhos: ['P', 'M'],
-    fotos: [],
+    fotos: fotoDoProduto('produto-blusa-cropped-canelada'),
   },
   {
     id: 'produto-saia-midi-plissada',
@@ -41,7 +46,7 @@ export const produtos: Produto[] = [
     categoria: 'Saias',
     preco: 59.9,
     tamanhos: ['P', 'M', 'G'],
-    fotos: [],
+    fotos: fotoDoProduto('produto-saia-midi-plissada'),
   },
   {
     id: 'produto-conjunto-linho-off-white',
@@ -50,7 +55,7 @@ export const produtos: Produto[] = [
     categoria: 'Vestidos',
     preco: 139.0,
     tamanhos: ['M', 'G'],
-    fotos: [],
+    fotos: fotoDoProduto('produto-conjunto-linho-off-white'),
   },
   {
     id: 'produto-vestido-chita-manga-bufante',
@@ -59,7 +64,7 @@ export const produtos: Produto[] = [
     categoria: 'Vestidos',
     preco: 74.9,
     tamanhos: ['P', 'M', 'G'],
-    fotos: [],
+    fotos: fotoDoProduto('produto-vestido-chita-manga-bufante'),
   },
   {
     id: 'produto-vestido-manga-longa-brilho',
@@ -69,7 +74,7 @@ export const produtos: Produto[] = [
     preco: 98.0,
     precoAntigo: 135,
     tamanhos: ['M', 'G'],
-    fotos: [],
+    fotos: fotoDoProduto('produto-vestido-manga-longa-brilho'),
   },
   {
     id: 'produto-vestido-longo-fenda-preto',
@@ -79,7 +84,7 @@ export const produtos: Produto[] = [
     preco: 129.9,
     precoAntigo: 170,
     tamanhos: ['M', 'G', 'GG'],
-    fotos: [],
+    fotos: fotoDoProduto('produto-vestido-longo-fenda-preto'),
   },
   {
     id: 'produto-vestido-midi-verde-esmeralda',
@@ -89,7 +94,7 @@ export const produtos: Produto[] = [
     preco: 105.0,
     precoAntigo: 149,
     tamanhos: ['PP', 'P', 'M'],
-    fotos: [],
+    fotos: fotoDoProduto('produto-vestido-midi-verde-esmeralda'),
   },
   {
     id: 'produto-vestido-tubinho-paete',
@@ -99,6 +104,6 @@ export const produtos: Produto[] = [
     preco: 145.0,
     precoAntigo: 189,
     tamanhos: ['M', 'G'],
-    fotos: [],
+    fotos: fotoDoProduto('produto-vestido-tubinho-paete'),
   },
 ]

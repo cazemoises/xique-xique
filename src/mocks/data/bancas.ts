@@ -1,4 +1,12 @@
 import type { Banca } from '../../domain/banca'
+import { placeholderImage } from './placeholderImage'
+
+function fotosDaBanca(id: string) {
+  return {
+    fotoCapaUrl: placeholderImage(`${id}-capa`, 800, 400),
+    fotoLogoUrl: placeholderImage(`${id}-logo`, 200, 200),
+  }
+}
 
 export const bancas: Banca[] = [
   {
@@ -13,6 +21,7 @@ export const bancas: Banca[] = [
     taxaEntrega: 6,
     taxaEntregaLabel: 'Entrega R$ 6',
     verificada: true,
+    ...fotosDaBanca('banca-dona-zefa'),
   },
   {
     id: 'banca-ze-confeccoes',
@@ -25,6 +34,7 @@ export const bancas: Banca[] = [
     taxaEntrega: 0,
     taxaEntregaLabel: 'Entrega grátis acima de R$ 90',
     verificada: true,
+    ...fotosDaBanca('banca-ze-confeccoes'),
   },
   {
     id: 'banca-pe-de-serra-kids',
@@ -37,6 +47,7 @@ export const bancas: Banca[] = [
     taxaEntrega: 8,
     taxaEntregaLabel: 'Entrega R$ 8',
     verificada: false,
+    ...fotosDaBanca('banca-pe-de-serra-kids'),
   },
   {
     id: 'banca-atelie-nice',
@@ -49,6 +60,7 @@ export const bancas: Banca[] = [
     taxaEntrega: 6,
     taxaEntregaLabel: 'Entrega R$ 6',
     verificada: true,
+    ...fotosDaBanca('banca-atelie-nice'),
   },
   {
     id: 'banca-bazar-estrela',
@@ -61,6 +73,7 @@ export const bancas: Banca[] = [
     taxaEntrega: 6,
     taxaEntregaLabel: 'Entrega R$ 6',
     verificada: false,
+    ...fotosDaBanca('banca-bazar-estrela'),
   },
   {
     id: 'banca-chita-e-cia',
@@ -73,6 +86,7 @@ export const bancas: Banca[] = [
     taxaEntrega: 9,
     taxaEntregaLabel: 'Entrega R$ 9',
     verificada: true,
+    ...fotosDaBanca('banca-chita-e-cia'),
   },
   {
     id: 'banca-luar-modas',
@@ -85,6 +99,7 @@ export const bancas: Banca[] = [
     taxaEntrega: 11,
     taxaEntregaLabel: 'Entrega R$ 11',
     verificada: false,
+    ...fotosDaBanca('banca-luar-modas'),
   },
   {
     id: 'banca-jeans-alto-do-moura',
@@ -97,5 +112,6 @@ export const bancas: Banca[] = [
     taxaEntrega: 12,
     taxaEntregaLabel: 'Entrega R$ 12',
     verificada: false,
+    ...fotosDaBanca('banca-jeans-alto-do-moura'),
   },
 ]

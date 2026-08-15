@@ -10,7 +10,7 @@ export function VerifiedInfoSheet({ onClose }: VerifiedInfoSheetProps) {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="flex w-full flex-col gap-3 rounded-t-3xl bg-white px-5.5 pb-10 pt-6"
+        className="mx-auto flex w-full max-w-md flex-col gap-3 rounded-t-3xl bg-white px-5.5 pb-10 pt-6"
       >
         <div className="h-1.5 w-10 self-center rounded-full bg-sand-border" />
         <div className="flex items-center gap-2.5">
