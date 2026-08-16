@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState, type ChangeEvent } from 'react'
 import { useParams } from 'react-router-dom'
 import { Screen } from '../components/Screen'
 import { SellerHeader } from '../components/SellerHeader'
@@ -21,6 +21,14 @@ export function SellerProductForm() {
   const [preco, setPreco] = useState(89.9)
   const [quantidade, setQuantidade] = useState(3)
   const [salvo, setSalvo] = useState(false)
+  const [fotoPreview, setFotoPreview] = useState<string | null>(null)
+  const fotoInputRef = useRef<HTMLInputElement>(null)
+  const fotoInputRefDesktop = useRef<HTMLInputElement>(null)
+
+  function handleFotoSelecionada(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (file) setFotoPreview(URL.createObjectURL(file))
+  }
 
   useEffect(() => {
     if (!produto) return
@@ -49,10 +57,14 @@ export function SellerProductForm() {
           </div>
         )}
 
-        {fotoExistente ? (
-          <PlaceholderPhoto label="foto peça" src={fotoExistente} className="h-47.5 w-full rounded-2xl" />
+        {(fotoPreview ?? fotoExistente) ? (
+          <PlaceholderPhoto label="foto peça" src={fotoPreview ?? fotoExistente} className="h-47.5 w-full rounded-2xl" />
         ) : (
-          <div className="flex h-47.5 flex-col items-center justify-center gap-2.25 rounded-2xl border-2 border-dashed border-[#D8B98D] bg-[repeating-linear-gradient(135deg,#F0E0CC_0_8px,#E6D2B9_8px_16px)]">
+          <button
+            type="button"
+            onClick={() => fotoInputRef.current?.click()}
+            className="flex h-47.5 w-full flex-col items-center justify-center gap-2.25 rounded-2xl border-2 border-dashed border-[#D8B98D] bg-[repeating-linear-gradient(135deg,#F0E0CC_0_8px,#E6D2B9_8px_16px)] transition-colors hover:border-terracota focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-2"
+          >
             <div className="flex h-13 w-13 items-center justify-center rounded-full bg-white">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7C6244" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M4 8h3l2-3h6l2 3h3v11H4z" />
@@ -61,8 +73,15 @@ export function SellerProductForm() {
             </div>
             <span className="text-base font-bold text-muted">Toque para tirar a foto</span>
             <span className="text-xs text-muted-2">Só 1 foto já publica a peça</span>
-          </div>
+          </button>
         )}
+        <input
+          ref={fotoInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleFotoSelecionada}
+        />
 
         <p className="mb-2.25 mt-5 text-base font-bold">O que é?</p>
         <div className="flex flex-wrap gap-2">
@@ -71,8 +90,8 @@ export function SellerProductForm() {
               key={t}
               type="button"
               onClick={() => setTipo(t)}
-              className={`rounded-full px-3.5 py-2.5 text-sm font-semibold ${
-                t === tipo ? 'bg-ink text-white' : 'bg-sand-chip text-muted-3'
+              className={`rounded-full px-3.5 py-2.5 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1 ${
+                t === tipo ? 'bg-ink text-white hover:bg-ink-2' : 'bg-sand-chip text-muted-3 hover:bg-sand-2'
               }`}
             >
               {t}
@@ -94,8 +113,8 @@ export function SellerProductForm() {
               key={t}
               type="button"
               onClick={() => setTamanho(t)}
-              className={`min-w-11 rounded-xl border-[1.5px] py-2.75 text-center text-sm font-semibold ${
-                t === tamanho ? 'border-ink bg-ink text-white' : 'border-sand-border bg-white text-ink'
+              className={`min-w-11 rounded-xl border-[1.5px] py-2.75 text-center text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1 ${
+                t === tamanho ? 'border-ink bg-ink text-white hover:bg-ink-2' : 'border-sand-border bg-white text-ink hover:border-ink'
               }`}
             >
               {t}
@@ -111,17 +130,17 @@ export function SellerProductForm() {
               step="0.10"
               value={preco}
               onChange={(e) => setPreco(Number(e.target.value))}
-              className="w-full rounded-2xl border-[1.5px] border-sand-border bg-white px-3.5 py-3.25 font-display text-base font-bold outline-none"
+              className="w-full rounded-2xl border-[1.5px] border-sand-border bg-white px-3.5 py-3.25 font-display text-base font-bold outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota"
             />
           </div>
           <div className="flex-1">
             <p className="mb-2 text-base font-bold">Quantas tem</p>
             <div className="flex items-center justify-between rounded-2xl border-[1.5px] border-sand-border bg-white px-3.5 py-3.25 text-lg font-semibold">
-              <button type="button" onClick={() => setQuantidade((q) => Math.max(0, q - 1))} className="text-faded">
+              <button type="button" onClick={() => setQuantidade((q) => Math.max(0, q - 1))} className="rounded-sm px-1 text-faded transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1">
                 −
               </button>
               <span>{quantidade}</span>
-              <button type="button" onClick={() => setQuantidade((q) => q + 1)} className="text-terracota">
+              <button type="button" onClick={() => setQuantidade((q) => q + 1)} className="rounded-sm px-1 text-terracota transition-colors hover:text-barro focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1">
                 +
               </button>
             </div>
@@ -134,7 +153,7 @@ export function SellerProductForm() {
         <button
           type="button"
           onClick={() => setSalvo(true)}
-          className="w-full rounded-2xl bg-terracota py-4 text-center text-lg font-bold text-white shadow-cta"
+          className="w-full rounded-2xl bg-terracota py-4 text-center text-lg font-bold text-white shadow-cta transition hover:bg-barro active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-terracota"
         >
           {cta} · {formatPrice(preco)}
         </button>
@@ -150,10 +169,14 @@ export function SellerProductForm() {
 
           <h2 className="m-0 font-display text-2xl font-bold">{titulo}</h2>
 
-          {fotoExistente ? (
-            <PlaceholderPhoto label="foto peça" src={fotoExistente} className="h-55 w-full rounded-2xl" />
+          {(fotoPreview ?? fotoExistente) ? (
+            <PlaceholderPhoto label="foto peça" src={fotoPreview ?? fotoExistente} className="h-55 w-full rounded-2xl" />
           ) : (
-            <div className="flex h-55 flex-col items-center justify-center gap-2.5 rounded-2xl border-2 border-dashed border-[#D8B98D] bg-[repeating-linear-gradient(135deg,#F0E0CC_0_8px,#E6D2B9_8px_16px)]">
+            <button
+              type="button"
+              onClick={() => fotoInputRefDesktop.current?.click()}
+              className="flex h-55 w-full flex-col items-center justify-center gap-2.5 rounded-2xl border-2 border-dashed border-[#D8B98D] bg-[repeating-linear-gradient(135deg,#F0E0CC_0_8px,#E6D2B9_8px_16px)] transition-colors hover:border-terracota focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-2"
+            >
               <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white">
                 <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7C6244" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M4 8h3l2-3h6l2 3h3v11H4z" />
@@ -162,8 +185,15 @@ export function SellerProductForm() {
               </div>
               <span className="text-base font-bold text-muted">Clique para enviar a foto</span>
               <span className="text-xs text-muted-2">Só 1 foto já publica a peça</span>
-            </div>
+            </button>
           )}
+          <input
+            ref={fotoInputRefDesktop}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleFotoSelecionada}
+          />
 
           <div>
             <p className="mb-2.5 text-sm font-bold">O que é?</p>
@@ -173,8 +203,8 @@ export function SellerProductForm() {
                   key={t}
                   type="button"
                   onClick={() => setTipo(t)}
-                  className={`rounded-full px-4 py-2.75 text-sm font-semibold ${
-                    t === tipo ? 'bg-ink text-white' : 'bg-sand-chip text-muted-3'
+                  className={`rounded-full px-4 py-2.75 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1 ${
+                    t === tipo ? 'bg-ink text-white hover:bg-ink-2' : 'bg-sand-chip text-muted-3 hover:bg-sand-2'
                   }`}
                 >
                   {t}
@@ -198,8 +228,8 @@ export function SellerProductForm() {
                   key={t}
                   type="button"
                   onClick={() => setTamanho(t)}
-                  className={`min-w-12.5 rounded-xl border-[1.5px] py-3 text-center text-sm font-semibold ${
-                    t === tamanho ? 'border-ink bg-ink text-white' : 'border-sand-border bg-white text-ink'
+                  className={`min-w-12.5 rounded-xl border-[1.5px] py-3 text-center text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1 ${
+                    t === tamanho ? 'border-ink bg-ink text-white hover:bg-ink-2' : 'border-sand-border bg-white text-ink hover:border-ink'
                   }`}
                 >
                   {t}
@@ -216,17 +246,17 @@ export function SellerProductForm() {
                 step="0.10"
                 value={preco}
                 onChange={(e) => setPreco(Number(e.target.value))}
-                className="w-full rounded-2xl border-[1.5px] border-sand-border bg-white px-4 py-3.5 font-display text-base font-bold outline-none"
+                className="w-full rounded-2xl border-[1.5px] border-sand-border bg-white px-4 py-3.5 font-display text-base font-bold outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota"
               />
             </div>
             <div className="flex-1">
               <p className="mb-2.25 text-sm font-bold">Quantas tem</p>
               <div className="flex items-center justify-between rounded-2xl border-[1.5px] border-sand-border bg-white px-4 py-3.5 text-lg font-semibold">
-                <button type="button" onClick={() => setQuantidade((q) => Math.max(0, q - 1))} className="text-faded">
+                <button type="button" onClick={() => setQuantidade((q) => Math.max(0, q - 1))} className="rounded-sm px-1 text-faded transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1">
                   −
                 </button>
                 <span>{quantidade}</span>
-                <button type="button" onClick={() => setQuantidade((q) => q + 1)} className="text-terracota">
+                <button type="button" onClick={() => setQuantidade((q) => q + 1)} className="rounded-sm px-1 text-terracota transition-colors hover:text-barro focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1">
                   +
                 </button>
               </div>
@@ -236,7 +266,7 @@ export function SellerProductForm() {
           <button
             type="button"
             onClick={() => setSalvo(true)}
-            className="max-w-80 rounded-2xl bg-terracota py-4.25 text-center text-base font-bold text-white shadow-cta"
+            className="max-w-80 rounded-2xl bg-terracota py-4.25 text-center text-base font-bold text-white shadow-cta transition hover:bg-barro active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-terracota"
           >
             {cta} · {formatPrice(preco)}
           </button>
@@ -245,7 +275,7 @@ export function SellerProductForm() {
         <div className="sticky top-10 flex flex-col gap-2.5">
           <span className="text-xs font-semibold uppercase tracking-wide text-muted-2">Como o comprador vai ver</span>
           <div className="w-55 overflow-hidden rounded-2xl border border-sand-border bg-white">
-            <PlaceholderPhoto label="foto peça" src={fotoExistente} className="h-62.5 w-full" />
+            <PlaceholderPhoto label="foto peça" src={fotoPreview ?? fotoExistente} className="h-62.5 w-full" />
             <div className="flex flex-col gap-1 px-3.25 py-3.5">
               <span className="text-sm leading-snug">{tipo}</span>
               <span className="text-lg font-bold">{formatPrice(preco)}</span>

@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { Screen } from '../components/Screen'
 import { TopNav } from '../components/TopNav'
 import { PlaceholderPhoto } from '../components/PlaceholderPhoto'
+import { LoadingState } from '../components/LoadingState'
+import { LocationSheet } from '../components/LocationSheet'
 import { useAsync } from '../hooks/useAsync'
 import { getPolos } from '../services/polos'
 import { marketImage, produtoImage, bancaImage } from '../mocks/data/curatedImage'
@@ -10,8 +12,9 @@ import { marketImage, produtoImage, bancaImage } from '../mocks/data/curatedImag
 const categorias = ['Tudo', 'Feminino', 'Masculino', 'Infantil', 'Cama']
 
 export function Home() {
-  const { data: polos } = useAsync(getPolos, [])
+  const { data: polos, loading: polosLoading } = useAsync(getPolos, [])
   const [categoriaAtiva, setCategoriaAtiva] = useState(categorias[0])
+  const [locationOpen, setLocationOpen] = useState(false)
 
   return (
     <Screen variant="wide">
@@ -24,14 +27,22 @@ export function Home() {
             <span className="text-lg font-bold">Rua São Vicente, 120 ▾</span>
             <span className="text-xs opacity-85">Maurício de Nassau · Caruaru</span>
           </div>
-          <div className="flex h-9.5 w-9.5 flex-none items-center justify-center rounded-full bg-white/18">
+          <button
+            type="button"
+            aria-label="Ver endereço de entrega"
+            onClick={() => setLocationOpen(true)}
+            className="flex h-9.5 w-9.5 flex-none items-center justify-center rounded-full bg-white/18 transition hover:bg-white/28 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-terracota"
+          >
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round">
               <circle cx="12" cy="8" r="4" />
               <path d="M4 21c0-4 3.6-6 8-6s8 2 8 6" />
             </svg>
-          </div>
+          </button>
         </div>
-        <Link to="/buscar" className="mt-4 flex items-center gap-2.5 rounded-2xl bg-white px-3.5 py-3">
+        <Link
+          to="/buscar"
+          className="mt-4 flex items-center gap-2.5 rounded-2xl bg-white px-3.5 py-3 transition hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-terracota"
+        >
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#9B8574" strokeWidth="2.2" strokeLinecap="round">
             <circle cx="11" cy="11" r="7" />
             <path d="M20 20l-4-4" />
@@ -40,11 +51,13 @@ export function Home() {
         </Link>
       </header>
 
+      {locationOpen && <LocationSheet onClose={() => setLocationOpen(false)} />}
+
       <main className="flex-1 px-5 pt-5 md:px-10 lg:hidden">
         <div className="grid grid-cols-2 gap-3 md:gap-5">
           <Link
             to="/bancas"
-            className="flex flex-col gap-6.5 rounded-2xl bg-oliva p-3.5 pt-4 text-white shadow-accent-oliva md:p-5 md:pt-6"
+            className="flex flex-col gap-6.5 rounded-2xl bg-oliva p-3.5 pt-4 text-white shadow-accent-oliva transition hover:brightness-110 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-oliva md:p-5 md:pt-6"
           >
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C08A3E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M3 9l2-5h14l2 5" />
@@ -62,7 +75,7 @@ export function Home() {
           </Link>
           <Link
             to="/buscar"
-            className="flex flex-col gap-6.5 rounded-2xl bg-ink p-3.5 pt-4 text-white shadow-accent-ink md:p-5 md:pt-6"
+            className="flex flex-col gap-6.5 rounded-2xl bg-ink p-3.5 pt-4 text-white shadow-accent-ink transition hover:brightness-110 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ink md:p-5 md:pt-6"
           >
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C08A3E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M4 6h16M4 12h16M4 18h10" />
@@ -85,8 +98,8 @@ export function Home() {
               key={categoria}
               type="button"
               onClick={() => setCategoriaAtiva(categoria)}
-              className={`flex-none rounded-full px-3 py-2 text-sm font-medium ${
-                categoria === categoriaAtiva ? 'bg-ink text-white' : 'bg-sand-chip text-muted-3'
+              className={`flex-none rounded-full px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1 ${
+                categoria === categoriaAtiva ? 'bg-ink text-white' : 'bg-sand-chip text-muted-3 hover:bg-sand-2'
               }`}
             >
               {categoria}
@@ -96,21 +109,34 @@ export function Home() {
 
         <div className="mt-6 flex items-baseline justify-between">
           <h3 className="m-0 font-display text-xl font-bold">Feiras abertas agora</h3>
-          <Link to="/feiras" className="text-xs font-medium text-terracota">ver todas</Link>
+          <Link
+            to="/feiras"
+            className="rounded-sm text-xs font-medium text-terracota transition-colors hover:text-barro focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1"
+          >
+            ver todas
+          </Link>
         </div>
-        <div className="mt-3 grid grid-cols-1 gap-3 sm:[grid-template-columns:repeat(auto-fit,minmax(11rem,1fr))]">
-          {polos?.map((polo) => (
-            <div key={polo.id} className="overflow-hidden rounded-2xl border border-sand-border bg-white">
-              <PlaceholderPhoto label="foto feira" src={polo.fotoUrl} className="h-19.5 w-full md:h-32" />
-              <div className="flex flex-col gap-0.5 px-2.5 py-2.5">
-                <span className="text-sm font-bold leading-tight">{polo.nome}</span>
-                <span className="text-xs text-muted-2">
-                  {polo.bancasCount} bancas · até {polo.abertoAte}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
+        {polosLoading && !polos ? (
+          <LoadingState label="Carregando feiras…" />
+        ) : (
+          <div className="mt-3 grid grid-cols-1 gap-3 sm:[grid-template-columns:repeat(auto-fit,minmax(11rem,1fr))]">
+            {polos?.map((polo) => (
+              <Link
+                key={polo.id}
+                to={`/bancas?polo=${polo.id}`}
+                className="overflow-hidden rounded-2xl border border-sand-border bg-white transition hover:border-terracota focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-2"
+              >
+                <PlaceholderPhoto label="foto feira" src={polo.fotoUrl} className="h-19.5 w-full md:h-32" />
+                <div className="flex flex-col gap-0.5 px-2.5 py-2.5">
+                  <span className="text-sm font-bold leading-tight">{polo.nome}</span>
+                  <span className="text-xs text-muted-2">
+                    {polo.bancasCount} bancas · até {polo.abertoAte}
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
 
         <div className="mt-6 flex items-center gap-3.5 rounded-2xl bg-ocre p-4">
           <div className="flex-1 flex-col gap-0.5">
@@ -133,7 +159,10 @@ export function Home() {
             <p className="m-0 max-w-125 text-lg leading-relaxed text-muted-3">
               As bancas do Parque 18 de Maio, da Sulanca e do Alto do Moura, direto pra você — sem sair de casa.
             </p>
-            <Link to="/buscar" className="flex items-center gap-2.5 rounded-2xl bg-white px-4.5 py-3.5 shadow-cta">
+            <Link
+              to="/buscar"
+              className="flex items-center gap-2.5 rounded-2xl bg-white px-4.5 py-3.5 shadow-cta transition hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-2"
+            >
               <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#9B8574" strokeWidth="2.2" strokeLinecap="round">
                 <circle cx="11" cy="11" r="7" />
                 <path d="M20 20l-4-4" />
@@ -147,8 +176,8 @@ export function Home() {
                   key={categoria}
                   type="button"
                   onClick={() => setCategoriaAtiva(categoria)}
-                  className={`flex-none rounded-full px-3.5 py-2.25 text-sm font-medium ${
-                    categoria === categoriaAtiva ? 'bg-ink text-white' : 'bg-white text-muted-3'
+                  className={`flex-none rounded-full px-3.5 py-2.25 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1 ${
+                    categoria === categoriaAtiva ? 'bg-ink text-white' : 'bg-white text-muted-3 hover:bg-sand-2'
                   }`}
                 >
                   {categoria}
@@ -170,7 +199,7 @@ export function Home() {
         <div className="grid grid-cols-2 gap-5 px-12 pt-10">
           <Link
             to="/bancas"
-            className="flex items-center gap-6.5 rounded-3xl bg-oliva p-8 text-white shadow-accent-oliva"
+            className="flex items-center gap-6.5 rounded-3xl bg-oliva p-8 text-white shadow-accent-oliva transition hover:brightness-110 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-oliva"
           >
             <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#C08A3E" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="flex-none">
               <path d="M3 9l2-5h14l2 5" />
@@ -184,7 +213,10 @@ export function Home() {
               </span>
             </div>
           </Link>
-          <Link to="/buscar" className="flex items-center gap-6.5 rounded-3xl bg-ink p-8 text-white shadow-accent-ink">
+          <Link
+            to="/buscar"
+            className="flex items-center gap-6.5 rounded-3xl bg-ink p-8 text-white shadow-accent-ink transition hover:brightness-110 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ink"
+          >
             <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#C08A3E" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="flex-none">
               <path d="M4 6h16M4 12h16M4 18h10" />
               <circle cx="18.5" cy="18" r="3.2" />
@@ -201,21 +233,34 @@ export function Home() {
         <div className="px-12 pt-11">
           <div className="flex items-baseline justify-between">
             <h3 className="m-0 font-display text-2xl font-bold">Feiras abertas agora</h3>
-            <Link to="/feiras" className="text-sm font-semibold text-terracota">ver todas →</Link>
+            <Link
+              to="/feiras"
+              className="rounded-sm text-sm font-semibold text-terracota transition-colors hover:text-barro focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1"
+            >
+              ver todas →
+            </Link>
           </div>
-          <div className="mt-4.5 grid grid-cols-4 gap-4.5">
-            {polos?.map((polo) => (
-              <div key={polo.id} className="overflow-hidden rounded-2xl border border-sand-border bg-white">
-                <PlaceholderPhoto label="foto feira" src={polo.fotoUrl} className="h-32.5 w-full" />
-                <div className="flex flex-col gap-1 px-3.5 py-3.5">
-                  <span className="text-lg font-bold leading-tight">{polo.nome}</span>
-                  <span className="text-sm text-muted-2">
-                    {polo.bancasCount} bancas · até {polo.abertoAte}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
+          {polosLoading && !polos ? (
+            <LoadingState label="Carregando feiras…" />
+          ) : (
+            <div className="mt-4.5 grid grid-cols-4 gap-4.5">
+              {polos?.map((polo) => (
+                <Link
+                  key={polo.id}
+                  to={`/bancas?polo=${polo.id}`}
+                  className="overflow-hidden rounded-2xl border border-sand-border bg-white transition hover:border-terracota focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-2"
+                >
+                  <PlaceholderPhoto label="foto feira" src={polo.fotoUrl} className="h-32.5 w-full" />
+                  <div className="flex flex-col gap-1 px-3.5 py-3.5">
+                    <span className="text-lg font-bold leading-tight">{polo.nome}</span>
+                    <span className="text-sm text-muted-2">
+                      {polo.bancasCount} bancas · até {polo.abertoAte}
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="mx-12 mt-10 flex items-center gap-5 rounded-3xl bg-ocre p-6.5">

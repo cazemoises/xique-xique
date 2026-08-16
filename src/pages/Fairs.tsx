@@ -2,18 +2,23 @@ import { Link } from 'react-router-dom'
 import { Screen } from '../components/Screen'
 import { TopNav } from '../components/TopNav'
 import { PlaceholderPhoto } from '../components/PlaceholderPhoto'
+import { LoadingState } from '../components/LoadingState'
 import { useAsync } from '../hooks/useAsync'
 import { getPolos } from '../services/polos'
 
 export function Fairs() {
-  const { data: polos } = useAsync(() => getPolos(), [])
+  const { data: polos, loading: polosLoading } = useAsync(() => getPolos(), [])
 
   return (
     <Screen variant="wide">
       <TopNav active="feiras" />
 
       <div className="flex items-center gap-3 border-b border-sand-border bg-white px-5 pt-8 pb-3.5 md:px-10 lg:hidden">
-        <Link to="/" aria-label="Voltar">
+        <Link
+          to="/"
+          aria-label="Voltar"
+          className="transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1 rounded-sm"
+        >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#241A16" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M15 5l-7 7 7 7" />
           </svg>
@@ -22,24 +27,28 @@ export function Fairs() {
       </div>
 
       <div className="flex-1 px-4 pt-3.5 pb-24 md:px-10 lg:hidden">
-        <div className="grid grid-cols-2 gap-3">
-          {polos?.map((polo) => (
-            <Link
-              key={polo.id}
-              to={`/bancas?polo=${polo.id}`}
-              className="overflow-hidden rounded-2xl border border-sand-border bg-white"
-            >
-              <PlaceholderPhoto label="foto feira" src={polo.fotoUrl} className="h-24 w-full" />
-              <div className="flex flex-col gap-0.5 px-2.5 py-2.5">
-                <span className="text-sm font-bold leading-tight">{polo.nome}</span>
-                <span className="text-xs text-muted-2">
-                  {polo.bancasCount} bancas · até {polo.abertoAte}
-                </span>
-                <span className="text-2xs text-muted-2">{polo.endereco}</span>
-              </div>
-            </Link>
-          ))}
-        </div>
+        {polosLoading && !polos ? (
+          <LoadingState label="Carregando feiras…" />
+        ) : (
+          <div className="grid grid-cols-2 gap-3">
+            {polos?.map((polo) => (
+              <Link
+                key={polo.id}
+                to={`/bancas?polo=${polo.id}`}
+                className="overflow-hidden rounded-2xl border border-sand-border bg-white transition hover:border-terracota focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-2"
+              >
+                <PlaceholderPhoto label="foto feira" src={polo.fotoUrl} className="h-24 w-full" />
+                <div className="flex flex-col gap-0.5 px-2.5 py-2.5">
+                  <span className="text-sm font-bold leading-tight">{polo.nome}</span>
+                  <span className="text-xs text-muted-2">
+                    {polo.bancasCount} bancas · até {polo.abertoAte}
+                  </span>
+                  <span className="text-2xs text-muted-2">{polo.endereco}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="hidden lg:block">
@@ -49,24 +58,28 @@ export function Fairs() {
             {polos?.length ?? 0} feiras disponíveis · escolha uma pra ver as bancas de lá
           </p>
         </div>
-        <div className="grid grid-cols-4 gap-4.5 px-12 py-8">
-          {polos?.map((polo) => (
-            <Link
-              key={polo.id}
-              to={`/bancas?polo=${polo.id}`}
-              className="overflow-hidden rounded-2xl border border-sand-border bg-white"
-            >
-              <PlaceholderPhoto label="foto feira" src={polo.fotoUrl} className="h-40 w-full" />
-              <div className="flex flex-col gap-1 px-3.5 py-3.5">
-                <span className="text-lg font-bold leading-tight">{polo.nome}</span>
-                <span className="text-sm text-muted-2">
-                  {polo.bancasCount} bancas · até {polo.abertoAte}
-                </span>
-                <span className="text-xs text-muted-2">{polo.endereco}</span>
-              </div>
-            </Link>
-          ))}
-        </div>
+        {polosLoading && !polos ? (
+          <LoadingState label="Carregando feiras…" />
+        ) : (
+          <div className="grid grid-cols-4 gap-4.5 px-12 py-8">
+            {polos?.map((polo) => (
+              <Link
+                key={polo.id}
+                to={`/bancas?polo=${polo.id}`}
+                className="overflow-hidden rounded-2xl border border-sand-border bg-white transition hover:border-terracota focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-2"
+              >
+                <PlaceholderPhoto label="foto feira" src={polo.fotoUrl} className="h-40 w-full" />
+                <div className="flex flex-col gap-1 px-3.5 py-3.5">
+                  <span className="text-lg font-bold leading-tight">{polo.nome}</span>
+                  <span className="text-sm text-muted-2">
+                    {polo.bancasCount} bancas · até {polo.abertoAte}
+                  </span>
+                  <span className="text-xs text-muted-2">{polo.endereco}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </Screen>
   )

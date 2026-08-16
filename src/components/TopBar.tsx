@@ -16,7 +16,7 @@ export function TopBar({ title, subtitle, onBack }: TopBarProps) {
         type="button"
         onClick={onBack ?? (() => navigate(-1))}
         aria-label="Voltar"
-        className="flex-none"
+        className="flex-none rounded-full p-1 transition-colors hover:bg-sand-chip focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#241A16" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M15 5l-7 7 7 7" />

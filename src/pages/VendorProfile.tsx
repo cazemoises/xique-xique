@@ -5,6 +5,7 @@ import { TopNav } from '../components/TopNav'
 import { PlaceholderPhoto } from '../components/PlaceholderPhoto'
 import { VerifiedBadge } from '../components/VerifiedBadge'
 import { VerifiedInfoSheet } from '../components/VerifiedInfoSheet'
+import { LoadingState } from '../components/LoadingState'
 import { useAsync } from '../hooks/useAsync'
 import { getBanca, getCatalogoDaBanca } from '../services/bancas'
 import { formatPrice } from '../lib/formatPrice'
@@ -23,11 +24,12 @@ function naFaixa(preco: number, faixa: FaixaPreco): boolean {
 
 export function VendorProfile() {
   const { id } = useParams<{ id: string }>()
-  const { data: banca } = useAsync(() => getBanca(id!), [id])
+  const { data: banca, loading: bancaLoading } = useAsync(() => getBanca(id!), [id])
   const { data: catalogo } = useAsync(() => getCatalogoDaBanca(id!), [id])
   const [verificadaAberta, setVerificadaAberta] = useState(false)
   const [tamanhoFiltro, setTamanhoFiltro] = useState<string[]>([])
   const [faixasPreco, setFaixasPreco] = useState<FaixaPreco[]>([])
+  const [favoritada, setFavoritada] = useState(false)
   const { itens } = useCart()
 
   const itensDestaBanca = itens.filter((item) => item.bancaId === id)
@@ -53,7 +55,17 @@ export function VendorProfile() {
     setFaixasPreco((atual) => (atual.includes(faixa) ? atual.filter((f) => f !== faixa) : [...atual, faixa]))
   }
 
-  if (!banca) return null
+  if (!banca) {
+    if (bancaLoading) {
+      return (
+        <Screen variant="wide">
+          <TopNav backTo="/bancas" backLabel="Voltar às bancas" showSearch showCart />
+          <LoadingState label="Carregando banca…" />
+        </Screen>
+      )
+    }
+    return null
+  }
 
   return (
     <Screen variant="wide">
@@ -64,7 +76,7 @@ export function VendorProfile() {
         <Link
           to="/bancas"
           aria-label="Voltar"
-          className="absolute left-4 top-14.5 flex h-8.5 w-8.5 items-center justify-center rounded-full bg-white/92 lg:hidden"
+          className="absolute left-4 top-14.5 flex h-8.5 w-8.5 items-center justify-center rounded-full bg-white/92 transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1 lg:hidden"
         >
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#241A16" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
             <path d="M15 5l-7 7 7 7" />
@@ -72,10 +84,11 @@ export function VendorProfile() {
         </Link>
         <button
           type="button"
-          aria-label="Favoritar"
-          className="absolute right-4 top-14.5 flex h-8.5 w-8.5 items-center justify-center rounded-full bg-white/92 lg:hidden"
+          aria-label={favoritada ? 'Remover dos favoritos' : 'Favoritar'}
+          onClick={() => setFavoritada((v) => !v)}
+          className="absolute right-4 top-14.5 flex h-8.5 w-8.5 items-center justify-center rounded-full bg-white/92 transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1 lg:hidden"
         >
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#8C4A3A" strokeWidth="2" strokeLinejoin="round">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill={favoritada ? '#8C4A3A' : 'none'} stroke="#8C4A3A" strokeWidth="2" strokeLinejoin="round">
             <path d="M12 20s-7-4.6-7-9.3A4.1 4.1 0 0112 8a4.1 4.1 0 017 2.7C19 15.4 12 20 12 20z" />
           </svg>
         </button>
@@ -112,12 +125,13 @@ export function VendorProfile() {
       </div>
 
       <div className="flex-1 px-4 pt-4 md:px-10 lg:hidden">
+        <p className="mb-2 text-xs text-muted-2">{catalogo?.length ?? 0} peças</p>
         <div className="grid grid-cols-2 gap-3 pb-44 md:grid-cols-3 md:gap-4">
           {catalogo?.map((produto) => (
             <Link
               key={produto.id}
               to={`/produto/${produto.id}`}
-              className="flex flex-col overflow-hidden rounded-2xl border border-sand-border bg-white"
+              className="flex flex-col overflow-hidden rounded-2xl border border-sand-border bg-white transition hover:border-terracota focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-2"
             >
               <PlaceholderPhoto label="foto peça" src={produto.fotos[0]} className="h-29.5 w-full" />
               <div className="flex flex-col gap-0.5 px-2.5 py-2.5">
@@ -133,7 +147,7 @@ export function VendorProfile() {
       {itensDestaBanca.length > 0 && (
         <Link
           to="/sacola"
-          className="fixed inset-x-4 bottom-24 z-30 mx-auto flex max-w-[416px] items-center justify-between rounded-2xl bg-terracota px-4.5 py-3.5 text-white shadow-pill lg:hidden"
+          className="fixed inset-x-4 bottom-24 z-30 mx-auto flex max-w-[416px] items-center justify-between rounded-2xl bg-terracota px-4.5 py-3.5 text-white shadow-pill transition hover:bg-barro active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-terracota lg:hidden"
         >
           <span className="text-base font-semibold">
             {itensDestaBanca.length} {itensDestaBanca.length === 1 ? 'peça' : 'peças'} na sacola
@@ -152,8 +166,10 @@ export function VendorProfile() {
                   key={tamanho}
                   type="button"
                   onClick={() => toggleTamanho(tamanho)}
-                  className={`rounded-lg px-3 py-2 text-sm font-semibold ${
-                    tamanhoFiltro.includes(tamanho) ? 'bg-ink text-white' : 'border-[1.5px] border-sand-border bg-white'
+                  className={`rounded-lg px-3 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1 ${
+                    tamanhoFiltro.includes(tamanho)
+                      ? 'bg-ink text-white hover:bg-ink-2'
+                      : 'border-[1.5px] border-sand-border bg-white hover:border-terracota'
                   }`}
                 >
                   {tamanho}
@@ -170,7 +186,7 @@ export function VendorProfile() {
                   type="checkbox"
                   checked={faixasPreco.includes('ate-60')}
                   onChange={() => toggleFaixa('ate-60')}
-                  className="accent-terracota"
+                  className="accent-terracota focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1"
                 />
                 Até R$ 60
               </label>
@@ -179,7 +195,7 @@ export function VendorProfile() {
                   type="checkbox"
                   checked={faixasPreco.includes('60-120')}
                   onChange={() => toggleFaixa('60-120')}
-                  className="accent-terracota"
+                  className="accent-terracota focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1"
                 />
                 R$ 60 – R$ 120
               </label>
@@ -188,7 +204,7 @@ export function VendorProfile() {
                   type="checkbox"
                   checked={faixasPreco.includes('acima-120')}
                   onChange={() => toggleFaixa('acima-120')}
-                  className="accent-terracota"
+                  className="accent-terracota focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1"
                 />
                 Acima de R$ 120
               </label>
@@ -201,27 +217,32 @@ export function VendorProfile() {
         </aside>
 
         <main className="relative flex-1 p-9 pb-24">
-          <div className="grid grid-cols-4 gap-4.5">
-            {catalogoFiltrado.map((produto) => (
-              <Link
-                key={produto.id}
-                to={`/produto/${produto.id}`}
-                className="flex flex-col overflow-hidden rounded-2xl border border-sand-border bg-white"
-              >
-                <PlaceholderPhoto label="foto peça" src={produto.fotos[0]} className="h-42.5 w-full" />
-                <div className="flex flex-col gap-1 px-3.25 py-3.5">
-                  <span className="text-sm leading-snug">{produto.nome}</span>
-                  <span className="text-lg font-bold">{formatPrice(produto.preco)}</span>
-                  <span className="text-xs text-muted-2">{produto.tamanhos.join(' · ')}</span>
-                </div>
-              </Link>
-            ))}
-          </div>
+          <p className="mb-3 text-sm text-muted-2">{catalogoFiltrado.length} peças</p>
+          {catalogo && catalogoFiltrado.length === 0 ? (
+            <p className="py-12 text-center text-sm text-muted-2">Nenhuma peça encontrada com esses filtros.</p>
+          ) : (
+            <div className="grid grid-cols-4 gap-4.5">
+              {catalogoFiltrado.map((produto) => (
+                <Link
+                  key={produto.id}
+                  to={`/produto/${produto.id}`}
+                  className="flex flex-col overflow-hidden rounded-2xl border border-sand-border bg-white transition hover:border-terracota focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-2"
+                >
+                  <PlaceholderPhoto label="foto peça" src={produto.fotos[0]} className="h-42.5 w-full" />
+                  <div className="flex flex-col gap-1 px-3.25 py-3.5">
+                    <span className="text-sm leading-snug">{produto.nome}</span>
+                    <span className="text-lg font-bold">{formatPrice(produto.preco)}</span>
+                    <span className="text-xs text-muted-2">{produto.tamanhos.join(' · ')}</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
 
           {itensDestaBanca.length > 0 && (
             <Link
               to="/sacola"
-              className="sticky bottom-6 ml-auto flex w-85 items-center justify-between rounded-2xl bg-terracota px-5 py-4 text-white shadow-pill"
+              className="sticky bottom-6 ml-auto flex w-85 items-center justify-between rounded-2xl bg-terracota px-5 py-4 text-white shadow-pill transition hover:bg-barro active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-terracota"
             >
               <span className="text-sm font-semibold">
                 {itensDestaBanca.length} {itensDestaBanca.length === 1 ? 'peça' : 'peças'} na sacola

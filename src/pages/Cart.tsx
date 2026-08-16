@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Screen } from '../components/Screen'
 import { TopBar } from '../components/TopBar'
 import { TopNav } from '../components/TopNav'
+import { LocationSheet } from '../components/LocationSheet'
 import { useAsync } from '../hooks/useAsync'
 import { getBancas } from '../services/bancas'
 import { getPolos } from '../services/polos'
@@ -18,6 +19,7 @@ export function Cart() {
   const { data: bancas } = useAsync(() => getBancas(), [])
   const { data: polos } = useAsync(() => getPolos(), [])
   const [enviando, setEnviando] = useState(false)
+  const [locationOpen, setLocationOpen] = useState(false)
   const navigate = useNavigate()
 
   const grupos = useMemo(
@@ -56,7 +58,15 @@ export function Cart() {
 
       <div className="flex-1 px-4 pt-3.5 lg:hidden">
         {itens.length === 0 && (
-          <p className="mt-10 text-center text-sm text-muted-2">Sua sacola está vazia.</p>
+          <div className="flex flex-col items-center gap-1">
+            <p className="mt-10 mb-0 text-center text-sm text-muted-2">Sua sacola está vazia.</p>
+            <Link
+              to="/bancas"
+              className="mx-auto mt-4 block w-fit rounded-2xl bg-terracota px-5 py-3 text-center text-sm font-semibold text-white shadow-cta transition hover:bg-barro active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-terracota"
+            >
+              Ver bancas perto de você
+            </Link>
+          </div>
         )}
 
         {itens.length > 0 && (
@@ -64,7 +74,13 @@ export function Cart() {
             <div className="rounded-2xl border border-sand-border bg-white p-3.5">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-medium uppercase tracking-wide text-muted-2">Entregar em</span>
-                <span className="text-xs font-semibold text-terracota">trocar</span>
+                <button
+                  type="button"
+                  onClick={() => setLocationOpen(true)}
+                  className="text-xs font-semibold text-terracota transition-colors hover:text-barro focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1 rounded-sm"
+                >
+                  trocar
+                </button>
               </div>
               <p className="mb-0 mt-1.75 text-sm font-semibold leading-snug">{ENDERECO}</p>
             </div>
@@ -135,7 +151,7 @@ export function Cart() {
                 <button
                   type="button"
                   onClick={() => aplicarCupom('PRIMEIRACOMPRA')}
-                  className="self-start text-xs font-semibold text-terracota"
+                  className="self-start text-xs font-semibold text-terracota transition-colors hover:text-barro focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1 rounded-sm"
                 >
                   Aplicar cupom PRIMEIRACOMPRA
                 </button>
@@ -166,7 +182,7 @@ export function Cart() {
             type="button"
             disabled={enviando}
             onClick={finalizarPedido}
-            className="w-full rounded-2xl bg-terracota py-4 text-center text-lg font-bold text-white shadow-cta disabled:opacity-60"
+            className="w-full rounded-2xl bg-terracota py-4 text-center text-lg font-bold text-white shadow-cta disabled:opacity-60 transition hover:bg-barro active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-terracota"
           >
             {enviando ? 'Enviando...' : `Fazer pedido · ${formatPrice(total)}`}
           </button>
@@ -178,7 +194,15 @@ export function Cart() {
 
       <div className="mx-auto hidden w-full max-w-page-narrow flex-1 gap-7 px-8 py-11 lg:grid lg:grid-cols-[1fr_25rem] lg:items-start">
         {itens.length === 0 && (
-          <p className="col-span-2 mt-10 text-center text-sm text-muted-2">Sua sacola está vazia.</p>
+          <div className="col-span-2 flex flex-col items-center gap-1">
+            <p className="mt-10 mb-0 text-center text-sm text-muted-2">Sua sacola está vazia.</p>
+            <Link
+              to="/bancas"
+              className="mx-auto mt-4 block w-fit rounded-2xl bg-terracota px-5 py-3 text-center text-sm font-semibold text-white shadow-cta transition hover:bg-barro active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-terracota"
+            >
+              Ver bancas perto de você
+            </Link>
+          </div>
         )}
 
         {itens.length > 0 && (
@@ -187,7 +211,13 @@ export function Cart() {
               <div className="rounded-2xl border border-sand-border bg-white p-4.5 shadow-[0_8px_24px_rgba(140,74,58,0.06)]">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-medium uppercase tracking-wide text-muted-2">Entregar em</span>
-                  <span className="text-xs font-semibold text-terracota">trocar</span>
+                  <button
+                    type="button"
+                    onClick={() => setLocationOpen(true)}
+                    className="text-xs font-semibold text-terracota transition-colors hover:text-barro focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1 rounded-sm"
+                  >
+                    trocar
+                  </button>
                 </div>
                 <p className="mb-0 mt-2 text-base font-semibold leading-snug">{ENDERECO}</p>
               </div>
@@ -262,7 +292,7 @@ export function Cart() {
                     <button
                       type="button"
                       onClick={() => aplicarCupom('PRIMEIRACOMPRA')}
-                      className="self-start text-sm font-semibold text-terracota"
+                      className="self-start text-sm font-semibold text-terracota transition-colors hover:text-barro focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1 rounded-sm"
                     >
                       Aplicar cupom PRIMEIRACOMPRA
                     </button>
@@ -282,14 +312,20 @@ export function Cart() {
                   <span className="text-sm font-semibold">Pagar com Pix</span>
                   <span className="text-xs text-muted-2">Dinheiro e cartão na entrega também</span>
                 </div>
-                <span className="text-xs font-semibold text-terracota">trocar</span>
+                <button
+                  type="button"
+                  onClick={() => setLocationOpen(true)}
+                  className="text-xs font-semibold text-terracota transition-colors hover:text-barro focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1 rounded-sm"
+                >
+                  trocar
+                </button>
               </div>
 
               <button
                 type="button"
                 disabled={enviando}
                 onClick={finalizarPedido}
-                className="rounded-2xl bg-terracota py-4.25 text-center text-base font-bold text-white shadow-cta disabled:opacity-60"
+                className="rounded-2xl bg-terracota py-4.25 text-center text-base font-bold text-white shadow-cta disabled:opacity-60 transition hover:bg-barro active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-terracota"
               >
                 {enviando ? 'Enviando...' : `Fazer pedido · ${formatPrice(total)}`}
               </button>
@@ -298,6 +334,8 @@ export function Cart() {
           </>
         )}
       </div>
+
+      {locationOpen && <LocationSheet onClose={() => setLocationOpen(false)} />}
     </Screen>
   )
 }

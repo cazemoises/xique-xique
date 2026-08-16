@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Screen } from '../components/Screen'
 import { TopBar } from '../components/TopBar'
 import { TopNav } from '../components/TopNav'
+import { LoadingState } from '../components/LoadingState'
 import { useAsync } from '../hooks/useAsync'
 import { getPedido } from '../services/pedidos'
 import { pedidoDemo, chatDemo } from '../mocks/data/pedidos'
@@ -15,9 +17,30 @@ const STATUS_LABEL: Record<string, string> = {
 
 export function OrderTracking() {
   const { id } = useParams<{ id: string }>()
-  const { data: pedido } = useAsync(() => getPedido(id!), [id])
+  const { data: pedido, loading: pedidoLoading } = useAsync(() => getPedido(id!), [id])
+  const [mensagem, setMensagem] = useState('')
+  const [mensagensEnviadas, setMensagensEnviadas] = useState<{ autor: 'comprador'; texto: string }[]>([])
 
-  if (!pedido) return null
+  function enviarMensagem() {
+    if (!mensagem.trim()) return
+    setMensagensEnviadas((atual) => [...atual, { autor: 'comprador', texto: mensagem.trim() }])
+    setMensagem('')
+  }
+
+  if (!pedido) {
+    if (pedidoLoading) {
+      return (
+        <Screen>
+          <TopNav title="Pedido" />
+          <div className="lg:hidden">
+            <TopBar title="Pedido" />
+          </div>
+          <LoadingState label="Carregando pedido…" />
+        </Screen>
+      )
+    }
+    return null
+  }
 
   const primeiroGrupo = pedido.gruposEntrega[0]
   const bancaNome = primeiroGrupo?.bancas[0]?.bancaNome ?? 'Banca'
@@ -79,7 +102,7 @@ export function OrderTracking() {
 
         <p className="mb-2.25 mt-1.5 text-base font-bold">Falar com a banca</p>
         <div className="flex flex-col gap-2.5 rounded-2xl border border-sand-border bg-white p-3">
-          {mensagens.length === 0 && (
+          {mensagens.length === 0 && mensagensEnviadas.length === 0 && (
             <p className="m-0 text-xs text-muted-2">Nenhuma mensagem ainda.</p>
           )}
           {mensagens.map((msg, i) => (
@@ -94,18 +117,33 @@ export function OrderTracking() {
               {msg.texto}
             </div>
           ))}
+          {mensagensEnviadas.map((msg, i) => (
+            <div
+              key={`enviada-${i}`}
+              className="max-w-[80%] rounded-xl px-3 py-2.25 text-sm leading-snug self-end rounded-br-[3px] bg-sand-chip text-ink"
+            >
+              {msg.texto}
+            </div>
+          ))}
         </div>
         <div className="mt-5 h-17.5" />
       </div>
 
       <div className="fixed inset-x-0 bottom-0 z-30 mx-auto flex w-full max-w-[480px] items-center gap-2.5 border-t border-sand-border bg-white px-4 py-3 pb-7.5 md:sticky md:inset-x-auto lg:hidden">
-        <div className="flex-1 rounded-full bg-sand-chip px-4 py-3 text-sm text-placeholder">
-          Escreva uma mensagem…
-        </div>
+        <input
+          value={mensagem}
+          onChange={(e) => setMensagem(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') enviarMensagem()
+          }}
+          placeholder="Escreva uma mensagem…"
+          className="flex-1 rounded-full bg-sand-chip px-4 py-3 text-sm text-ink outline-none placeholder:text-placeholder focus-visible:ring-2 focus-visible:ring-terracota"
+        />
         <button
           type="button"
           aria-label="Enviar mensagem"
-          className="flex h-10.5 w-10.5 flex-none items-center justify-center rounded-full bg-terracota"
+          onClick={enviarMensagem}
+          className="flex h-10.5 w-10.5 flex-none items-center justify-center rounded-full bg-terracota transition hover:bg-barro active:scale-[0.95] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-terracota"
         >
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
             <path d="M4 12l16-8-6 16-3-6-7-2z" />
@@ -154,7 +192,9 @@ export function OrderTracking() {
 
           <p className="mb-3 mt-1 text-base font-bold">Falar com a banca</p>
           <div className="flex flex-1 flex-col gap-2.75 rounded-2xl border border-sand-border bg-white p-3.5">
-            {mensagens.length === 0 && <p className="m-0 text-sm text-muted-2">Nenhuma mensagem ainda.</p>}
+            {mensagens.length === 0 && mensagensEnviadas.length === 0 && (
+              <p className="m-0 text-sm text-muted-2">Nenhuma mensagem ainda.</p>
+            )}
             {mensagens.map((msg, i) => (
               <div
                 key={i}
@@ -167,14 +207,29 @@ export function OrderTracking() {
                 {msg.texto}
               </div>
             ))}
-            <div className="mt-auto flex items-center gap-2.5">
-              <div className="flex-1 rounded-full bg-sand-chip px-4 py-3 text-sm text-placeholder">
-                Escreva uma mensagem…
+            {mensagensEnviadas.map((msg, i) => (
+              <div
+                key={`enviada-${i}`}
+                className="max-w-[75%] rounded-xl px-3.25 py-2.5 text-sm leading-snug self-end rounded-br-[3px] bg-sand-chip text-ink"
+              >
+                {msg.texto}
               </div>
+            ))}
+            <div className="mt-auto flex items-center gap-2.5">
+              <input
+                value={mensagem}
+                onChange={(e) => setMensagem(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') enviarMensagem()
+                }}
+                placeholder="Escreva uma mensagem…"
+                className="flex-1 rounded-full bg-sand-chip px-4 py-3 text-sm text-ink outline-none placeholder:text-placeholder focus-visible:ring-2 focus-visible:ring-terracota"
+              />
               <button
                 type="button"
                 aria-label="Enviar mensagem"
-                className="flex h-10.5 w-10.5 flex-none items-center justify-center rounded-full bg-terracota"
+                onClick={enviarMensagem}
+                className="flex h-10.5 w-10.5 flex-none items-center justify-center rounded-full bg-terracota transition hover:bg-barro active:scale-[0.95] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-terracota"
               >
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M4 12l16-8-6 16-3-6-7-2z" />

@@ -14,7 +14,7 @@ export function NotFound() {
       </div>
       <Link
         to="/"
-        className="mt-1 rounded-2xl bg-terracota px-6 py-3.5 text-sm font-semibold text-white shadow-cta lg:px-7 lg:py-4 lg:text-base"
+        className="mt-1 rounded-2xl bg-terracota px-6 py-3.5 text-sm font-semibold text-white shadow-cta transition hover:bg-barro active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-terracota lg:px-7 lg:py-4 lg:text-base"
       >
         Voltar para a Home
       </Link>

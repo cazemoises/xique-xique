@@ -14,16 +14,16 @@ export function SellerHeader({ active, mobileTitle }: SellerHeaderProps) {
         <div className="flex items-center gap-2 border-b border-sand-border bg-white px-5 py-2.5">
           <Link
             to="/feirante/produtos"
-            className={`rounded-full px-3 py-1.75 text-xs font-semibold ${
-              active === 'produtos' ? 'bg-ink text-white' : 'bg-sand-chip text-muted-3'
+            className={`rounded-full px-3 py-1.75 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1 ${
+              active === 'produtos' ? 'bg-ink text-white' : 'bg-sand-chip text-muted-3 hover:bg-sand-2'
             }`}
           >
             Meus produtos
           </Link>
           <Link
             to="/feirante/nova-peca"
-            className={`rounded-full px-3 py-1.75 text-xs font-semibold ${
-              active === 'form' ? 'bg-ink text-white' : 'bg-sand-chip text-muted-3'
+            className={`rounded-full px-3 py-1.75 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1 ${
+              active === 'form' ? 'bg-ink text-white' : 'bg-sand-chip text-muted-3 hover:bg-sand-2'
             }`}
           >
             Nova peça
@@ -42,10 +42,16 @@ export function SellerHeader({ active, mobileTitle }: SellerHeaderProps) {
           <span className="font-display text-lg font-bold leading-none text-sand-chip">Painel da banca</span>
         </div>
         <nav className="flex flex-none items-center gap-5.5 font-sans text-sm font-semibold">
-          <Link to="/feirante/produtos" className={active === 'produtos' ? 'text-white' : 'text-sand-2'}>
+          <Link
+            to="/feirante/produtos"
+            className={`rounded-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ocre focus-visible:ring-offset-2 focus-visible:ring-offset-ink ${active === 'produtos' ? 'text-white' : 'text-sand-2 hover:text-white'}`}
+          >
             Meus produtos
           </Link>
-          <Link to="/feirante/nova-peca" className={active === 'form' ? 'text-white' : 'text-sand-2'}>
+          <Link
+            to="/feirante/nova-peca"
+            className={`rounded-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ocre focus-visible:ring-offset-2 focus-visible:ring-offset-ink ${active === 'form' ? 'text-white' : 'text-sand-2 hover:text-white'}`}
+          >
             Nova peça
           </Link>
         </nav>
