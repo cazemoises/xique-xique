@@ -6,6 +6,7 @@ import { PlaceholderPhoto } from '../components/PlaceholderPhoto'
 import { VerifiedBadge } from '../components/VerifiedBadge'
 import { VerifiedInfoSheet } from '../components/VerifiedInfoSheet'
 import { LoadingState } from '../components/LoadingState'
+import { MapSheet } from '../components/MapSheet'
 import { useAsync } from '../hooks/useAsync'
 import { getBancas } from '../services/bancas'
 import { getPolos } from '../services/polos'
@@ -21,6 +22,7 @@ export function VendorsNearby() {
   const [categoriasFiltro, setCategoriasFiltro] = useState<string[]>([])
   const [entregaGratisOnly, setEntregaGratisOnly] = useState(false)
   const [ordenarPor, setOrdenarPor] = useState<'perto' | 'avaliacao'>('perto')
+  const [mapaAberto, setMapaAberto] = useState(false)
 
   const categoriasDisponiveis = useMemo(
     () => Array.from(new Set(bancas?.flatMap((b) => b.categorias) ?? [])).sort(),
@@ -142,7 +144,11 @@ export function VendorsNearby() {
           </div>
         )}
 
-        <div className="my-1.5 mb-4.5 flex items-center gap-3 rounded-2xl bg-oliva p-4 text-white">
+        <button
+          type="button"
+          onClick={() => setMapaAberto(true)}
+          className="my-1.5 mb-4.5 flex w-full items-center gap-3 rounded-2xl bg-oliva p-4 text-left text-white transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-oliva"
+        >
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C08A3E" strokeWidth="2" strokeLinecap="round">
             <path d="M12 21s7-6.3 7-11a7 7 0 10-14 0c0 4.7 7 11 7 11z" />
             <circle cx="12" cy="10" r="2.4" />
@@ -151,7 +157,7 @@ export function VendorsNearby() {
             <span className="font-display text-base font-bold leading-tight">Ver bancas no mapa da feira</span>
             <span className="text-xs opacity-80">Parque 18 de Maio · corredores A–J</span>
           </div>
-        </div>
+        </button>
       </div>
 
       <div className="hidden lg:flex">
@@ -218,14 +224,18 @@ export function VendorsNearby() {
             </div>
           </div>
 
-          <div className="mt-auto flex flex-col gap-2 rounded-2xl bg-oliva p-4 text-white">
+          <button
+            type="button"
+            onClick={() => setMapaAberto(true)}
+            className="mt-auto flex flex-col items-start gap-2 rounded-2xl bg-oliva p-4 text-left text-white transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-oliva"
+          >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C08A3E" strokeWidth="2" strokeLinecap="round">
               <path d="M12 21s7-6.3 7-11a7 7 0 10-14 0c0 4.7 7 11 7 11z" />
               <circle cx="12" cy="10" r="2.4" />
             </svg>
             <span className="font-display text-sm font-bold leading-tight">Ver no mapa da feira</span>
             <span className="text-xs opacity-80">Parque 18 de Maio · corredores A–J</span>
-          </div>
+          </button>
         </aside>
 
         <main className="flex-1 p-10">
@@ -283,6 +293,7 @@ export function VendorsNearby() {
       </div>
 
       {verificadaAberta && <VerifiedInfoSheet onClose={() => setVerificadaAberta(false)} />}
+      {mapaAberto && <MapSheet onClose={() => setMapaAberto(false)} />}
     </Screen>
   )
 }

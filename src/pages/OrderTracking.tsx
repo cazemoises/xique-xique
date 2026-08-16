@@ -4,6 +4,7 @@ import { Screen } from '../components/Screen'
 import { TopBar } from '../components/TopBar'
 import { TopNav } from '../components/TopNav'
 import { LoadingState } from '../components/LoadingState'
+import { BottomSheet } from '../components/BottomSheet'
 import { useAsync } from '../hooks/useAsync'
 import { getPedido } from '../services/pedidos'
 import { pedidoDemo, chatDemo } from '../mocks/data/pedidos'
@@ -20,6 +21,7 @@ export function OrderTracking() {
   const { data: pedido, loading: pedidoLoading } = useAsync(() => getPedido(id!), [id])
   const [mensagem, setMensagem] = useState('')
   const [mensagensEnviadas, setMensagensEnviadas] = useState<{ autor: 'comprador'; texto: string }[]>([])
+  const [ligarAberto, setLigarAberto] = useState(false)
 
   function enviarMensagem() {
     if (!mensagem.trim()) return
@@ -246,7 +248,13 @@ export function OrderTracking() {
               <span className="text-sm font-bold leading-tight">Zeca — motoboy da banca</span>
               <span className="text-xs text-muted-2">A 1,2 km de você · chega em ~14 min</span>
             </div>
-            <span className="text-xs font-semibold text-terracota">Ligar</span>
+            <button
+              type="button"
+              onClick={() => setLigarAberto(true)}
+              className="rounded-sm text-xs font-semibold text-terracota transition-colors hover:text-barro focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1"
+            >
+              Ligar
+            </button>
           </div>
           <div className="absolute left-1/2 top-1/2 h-6.5 w-6.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-white bg-terracota shadow-[0_4px_12px_rgba(36,26,22,0.3)]" />
           <span className="absolute bottom-6 left-6 rounded bg-cream/90 px-1.5 py-0.5 font-mono text-2xs text-muted-2">
@@ -254,6 +262,25 @@ export function OrderTracking() {
           </span>
         </div>
       </div>
+
+      {ligarAberto && (
+        <BottomSheet
+          onClose={() => setLigarAberto(false)}
+          title="Ligar para o motoboy"
+          icon={
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#5B6B45" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.362 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0122 16.92z" />
+            </svg>
+          }
+        >
+          <p className="m-0 text-sm leading-relaxed text-muted">
+            Ligação direta para o motoboy ainda não está disponível nesta versão.
+          </p>
+          <div className="mt-1.5 rounded-2xl bg-sand-chip p-3.5 text-sm leading-relaxed text-muted">
+            Use o chat com a banca abaixo para combinar a entrega.
+          </div>
+        </BottomSheet>
+      )}
     </Screen>
   )
 }

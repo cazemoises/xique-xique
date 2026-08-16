@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, type FormEvent } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { Screen } from '../components/Screen'
 import { TopNav } from '../components/TopNav'
 import { PlaceholderPhoto } from '../components/PlaceholderPhoto'
@@ -15,6 +15,13 @@ export function Home() {
   const { data: polos, loading: polosLoading } = useAsync(getPolos, [])
   const [categoriaAtiva, setCategoriaAtiva] = useState(categorias[0])
   const [locationOpen, setLocationOpen] = useState(false)
+  const [heroQuery, setHeroQuery] = useState('')
+  const navigate = useNavigate()
+
+  function buscar(e: FormEvent) {
+    e.preventDefault()
+    if (heroQuery.trim()) navigate(`/buscar?q=${encodeURIComponent(heroQuery.trim())}`)
+  }
 
   return (
     <Screen variant="wide">
@@ -22,11 +29,15 @@ export function Home() {
 
       <header className="rounded-b-3xl bg-gradient-to-b from-terracota to-barro px-5 pb-4.5 pt-8 text-white md:px-10 md:pb-8 md:pt-10 lg:hidden">
         <div className="flex items-center justify-between gap-3">
-          <div className="flex flex-col gap-0.5">
+          <button
+            type="button"
+            onClick={() => setLocationOpen(true)}
+            className="flex flex-col items-start gap-0.5 rounded-lg text-left transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-terracota"
+          >
             <span className="text-xs font-medium uppercase tracking-wide opacity-80">Entregar em</span>
             <span className="text-lg font-bold">Rua São Vicente, 120 ▾</span>
             <span className="text-xs opacity-85">Maurício de Nassau · Caruaru</span>
-          </div>
+          </button>
           <button
             type="button"
             aria-label="Ver endereço de entrega"
@@ -39,16 +50,21 @@ export function Home() {
             </svg>
           </button>
         </div>
-        <Link
-          to="/buscar"
-          className="mt-4 flex items-center gap-2.5 rounded-2xl bg-white px-3.5 py-3 transition hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-terracota"
+        <form
+          onSubmit={buscar}
+          className="mt-4 flex items-center gap-2.5 rounded-2xl bg-white px-3.5 py-3 transition focus-within:outline-none focus-within:ring-2 focus-within:ring-white focus-within:ring-offset-2 focus-within:ring-offset-terracota"
         >
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#9B8574" strokeWidth="2.2" strokeLinecap="round">
             <circle cx="11" cy="11" r="7" />
             <path d="M20 20l-4-4" />
           </svg>
-          <span className="text-sm text-placeholder">Buscar roupa, banca ou feira</span>
-        </Link>
+          <input
+            value={heroQuery}
+            onChange={(e) => setHeroQuery(e.target.value)}
+            placeholder="Buscar roupa, banca ou feira"
+            className="flex-1 bg-transparent text-sm text-ink outline-none placeholder:text-placeholder"
+          />
+        </form>
       </header>
 
       {locationOpen && <LocationSheet onClose={() => setLocationOpen(false)} />}
@@ -145,7 +161,12 @@ export function Home() {
             </p>
             <p className="m-0 text-xs leading-snug text-muted-3">Bancas a até 6 km de você</p>
           </div>
-          <span className="flex-none rounded-full bg-ink px-3 py-2 text-xs font-semibold text-white">Usar</span>
+          <Link
+            to="/bancas"
+            className="flex-none rounded-full bg-ink px-3 py-2 text-xs font-semibold text-white transition hover:bg-ink-2 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ink"
+          >
+            Usar
+          </Link>
         </div>
         <div className="h-24" />
       </main>
@@ -159,17 +180,27 @@ export function Home() {
             <p className="m-0 max-w-125 text-lg leading-relaxed text-muted-3">
               As bancas do Parque 18 de Maio, da Sulanca e do Alto do Moura, direto pra você — sem sair de casa.
             </p>
-            <Link
-              to="/buscar"
-              className="flex items-center gap-2.5 rounded-2xl bg-white px-4.5 py-3.5 shadow-cta transition hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-2"
+            <form
+              onSubmit={buscar}
+              className="flex items-center gap-2.5 rounded-2xl bg-white px-4.5 py-3.5 shadow-cta transition focus-within:outline-none focus-within:ring-2 focus-within:ring-terracota focus-within:ring-offset-2"
             >
               <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#9B8574" strokeWidth="2.2" strokeLinecap="round">
                 <circle cx="11" cy="11" r="7" />
                 <path d="M20 20l-4-4" />
               </svg>
-              <span className="flex-1 text-base text-placeholder">Buscar roupa, banca ou feira</span>
-              <span className="rounded-xl bg-terracota px-4.5 py-2.75 text-sm font-semibold text-white">Buscar</span>
-            </Link>
+              <input
+                value={heroQuery}
+                onChange={(e) => setHeroQuery(e.target.value)}
+                placeholder="Buscar roupa, banca ou feira"
+                className="flex-1 bg-transparent text-base text-ink outline-none placeholder:text-placeholder"
+              />
+              <button
+                type="submit"
+                className="rounded-xl bg-terracota px-4.5 py-2.75 text-sm font-semibold text-white transition hover:bg-barro active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-terracota"
+              >
+                Buscar
+              </button>
+            </form>
             <div className="flex flex-wrap gap-2.5">
               {categorias.map((categoria) => (
                 <button
@@ -270,7 +301,12 @@ export function Home() {
             </p>
             <p className="m-0 text-sm leading-snug text-muted-3">Bancas a até 6 km de você</p>
           </div>
-          <span className="flex-none rounded-full bg-ink px-5 py-3 text-sm font-semibold text-white">Usar cupom</span>
+          <Link
+            to="/bancas"
+            className="flex-none rounded-full bg-ink px-5 py-3 text-sm font-semibold text-white transition hover:bg-ink-2 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ink"
+          >
+            Usar cupom
+          </Link>
         </div>
         <div className="h-16" />
       </main>

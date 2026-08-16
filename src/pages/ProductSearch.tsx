@@ -4,6 +4,7 @@ import { Screen } from '../components/Screen'
 import { TopNav } from '../components/TopNav'
 import { PlaceholderPhoto } from '../components/PlaceholderPhoto'
 import { LoadingState } from '../components/LoadingState'
+import { BottomSheet } from '../components/BottomSheet'
 import { useAsync } from '../hooks/useAsync'
 import { buscarProdutos } from '../services/produtos'
 import { formatPrice } from '../lib/formatPrice'
@@ -17,30 +18,29 @@ export function ProductSearch() {
   const [mesmaFeiraOnly, setMesmaFeiraOnly] = useState(false)
   const [tamanhoFiltro, setTamanhoFiltro] = useState<string | null>(null)
   const [precoMax, setPrecoMax] = useState(PRECO_MAX_SLIDER)
+  const [ordenarPor, setOrdenarPor] = useState<'menor-preco' | 'maior-preco'>('menor-preco')
+  const [filtrosAbertos, setFiltrosAbertos] = useState(false)
   const { data: ofertas, loading: ofertasLoading } = useAsync(() => buscarProdutos({ q: query }), [query])
 
-  const poloDoMaisBarato = ofertas?.[0]?.poloId
-  const mesmaFeira = useMemo(() => ofertas?.filter((o) => o.poloId === poloDoMaisBarato) ?? [], [ofertas, poloDoMaisBarato])
-  const outrasFeiras = useMemo(() => ofertas?.filter((o) => o.poloId !== poloDoMaisBarato) ?? [], [ofertas, poloDoMaisBarato])
-  const bancasEnvolvidas = new Set(ofertas?.map((o) => o.banca.id)).size
+  const ofertasFiltradas = useMemo(() => {
+    const filtradas = (ofertas ?? [])
+      .filter((o) => !tamanhoFiltro || o.produto.tamanhos.includes(tamanhoFiltro))
+      .filter((o) => o.produto.preco <= precoMax)
+    return [...filtradas].sort((a, b) =>
+      ordenarPor === 'menor-preco' ? a.produto.preco - b.produto.preco : b.produto.preco - a.produto.preco,
+    )
+  }, [ofertas, tamanhoFiltro, precoMax, ordenarPor])
 
-  const ofertasDesktop = useMemo(
-    () =>
-      (ofertas ?? [])
-        .filter((o) => !tamanhoFiltro || o.produto.tamanhos.includes(tamanhoFiltro))
-        .filter((o) => o.produto.preco <= precoMax),
-    [ofertas, tamanhoFiltro, precoMax],
+  const poloDoMaisBarato = ofertasFiltradas[0]?.poloId
+  const mesmaFeira = useMemo(
+    () => ofertasFiltradas.filter((o) => o.poloId === poloDoMaisBarato),
+    [ofertasFiltradas, poloDoMaisBarato],
   )
-  const poloDoMaisBaratoDesktop = ofertasDesktop[0]?.poloId
-  const mesmaFeiraDesktop = useMemo(
-    () => ofertasDesktop.filter((o) => o.poloId === poloDoMaisBaratoDesktop),
-    [ofertasDesktop, poloDoMaisBaratoDesktop],
+  const outrasFeiras = useMemo(
+    () => ofertasFiltradas.filter((o) => o.poloId !== poloDoMaisBarato),
+    [ofertasFiltradas, poloDoMaisBarato],
   )
-  const outrasFeirasDesktop = useMemo(
-    () => ofertasDesktop.filter((o) => o.poloId !== poloDoMaisBaratoDesktop),
-    [ofertasDesktop, poloDoMaisBaratoDesktop],
-  )
-  const bancasEnvolvidasDesktop = new Set(ofertasDesktop.map((o) => o.banca.id)).size
+  const bancasEnvolvidas = new Set(ofertasFiltradas.map((o) => o.banca.id)).size
 
   return (
     <Screen variant="wide">
@@ -60,8 +60,24 @@ export function ProductSearch() {
           />
         </div>
         <div className="mt-2.75 flex flex-wrap gap-1.75">
-          <span className="rounded-full bg-ocre px-3 py-2 text-xs font-semibold text-ink">Tam. M ×</span>
-          <span className="rounded-full bg-ink-2 px-3 py-2 text-xs font-medium text-sand-2">Até R$ 150</span>
+          {tamanhoFiltro && (
+            <button
+              type="button"
+              onClick={() => setTamanhoFiltro(null)}
+              className="rounded-full bg-ocre px-3 py-2 text-xs font-semibold text-ink transition hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ocre focus-visible:ring-offset-1 focus-visible:ring-offset-ink"
+            >
+              Tam. {tamanhoFiltro} ×
+            </button>
+          )}
+          {precoMax < PRECO_MAX_SLIDER && (
+            <button
+              type="button"
+              onClick={() => setPrecoMax(PRECO_MAX_SLIDER)}
+              className="rounded-full bg-ink-2 px-3 py-2 text-xs font-medium text-sand-2 transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ocre focus-visible:ring-offset-1 focus-visible:ring-offset-ink"
+            >
+              Até {formatPrice(precoMax)} ×
+            </button>
+          )}
           <button
             type="button"
             onClick={() => setMesmaFeiraOnly((v) => !v)}
@@ -75,7 +91,13 @@ export function ProductSearch() {
             </svg>
             Mesma feira
           </button>
-          <span className="rounded-full bg-ink-2 px-3 py-2 text-xs font-medium text-sand-2">Filtros</span>
+          <button
+            type="button"
+            onClick={() => setFiltrosAbertos(true)}
+            className="rounded-full bg-ink-2 px-3 py-2 text-xs font-medium text-sand-2 transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ocre focus-visible:ring-offset-1 focus-visible:ring-offset-ink"
+          >
+            Filtros
+          </button>
         </div>
       </div>
 
@@ -84,10 +106,16 @@ export function ProductSearch() {
           <strong className="font-bold text-ink">
             {mesmaFeiraOnly
               ? `${mesmaFeira.length} ofertas · mesma feira`
-              : `${ofertas?.length ?? 0} ofertas de ${bancasEnvolvidas} bancas`}
+              : `${ofertasFiltradas.length} ofertas de ${bancasEnvolvidas} bancas`}
           </strong>
         </span>
-        <span className="text-xs font-semibold text-terracota">Menor preço ▾</span>
+        <button
+          type="button"
+          onClick={() => setOrdenarPor((atual) => (atual === 'menor-preco' ? 'maior-preco' : 'menor-preco'))}
+          className="rounded-sm text-xs font-semibold text-terracota transition-colors hover:text-barro focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1"
+        >
+          {ordenarPor === 'menor-preco' ? 'Menor preço ▾' : 'Maior preço ▾'}
+        </button>
       </div>
 
       <div className="flex-1 px-4 pt-2 md:px-10 lg:hidden">
@@ -150,12 +178,18 @@ export function ProductSearch() {
           <span className="text-sm text-sand-2">
             <strong className="font-bold text-white">
               {mesmaFeiraOnly
-                ? `${mesmaFeiraDesktop.length} ofertas · mesma feira`
-                : `${ofertasDesktop.length} ofertas de ${bancasEnvolvidasDesktop} bancas`}
+                ? `${mesmaFeira.length} ofertas · mesma feira`
+                : `${ofertasFiltradas.length} ofertas de ${bancasEnvolvidas} bancas`}
             </strong>
           </span>
           <div className="flex-1" />
-          <span className="rounded-full bg-ink-2 px-3.5 py-2.5 text-sm font-semibold text-sand-chip">Menor preço ▾</span>
+          <button
+            type="button"
+            onClick={() => setOrdenarPor((atual) => (atual === 'menor-preco' ? 'maior-preco' : 'menor-preco'))}
+            className="rounded-full bg-ink-2 px-3.5 py-2.5 text-sm font-semibold text-sand-chip transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ocre focus-visible:ring-offset-1 focus-visible:ring-offset-ink"
+          >
+            {ordenarPor === 'menor-preco' ? 'Menor preço ▾' : 'Maior preço ▾'}
+          </button>
         </div>
       </div>
 
@@ -238,23 +272,23 @@ export function ProductSearch() {
             <p className="py-16 text-center text-sm text-sand-2">Nenhuma oferta encontrada para “{query}”.</p>
           ) : (
             <>
-              {mesmaFeiraDesktop.length > 0 && (
+              {mesmaFeira.length > 0 && (
                 <>
                   <div className="flex items-center gap-2.5">
                     <span className="rounded-full bg-oliva px-2.25 py-1.5 text-xs font-bold tracking-wide text-white">
                       MESMA FEIRA · 1 ENTREGA
                     </span>
-                    <span className="text-sm text-sand-2">{mesmaFeiraDesktop[0]?.poloNome}</span>
+                    <span className="text-sm text-sand-2">{mesmaFeira[0]?.poloNome}</span>
                   </div>
                   <div className="mt-4 grid grid-cols-3 gap-4.5">
-                    {mesmaFeiraDesktop.map((oferta) => (
+                    {mesmaFeira.map((oferta) => (
                       <OfertaCardDesktop key={oferta.produto.id} oferta={oferta} />
                     ))}
                   </div>
                 </>
               )}
 
-              {!mesmaFeiraOnly && outrasFeirasDesktop.length > 0 && (
+              {!mesmaFeiraOnly && outrasFeiras.length > 0 && (
                 <>
                   <div className="mt-6.5 flex items-center gap-2.5">
                     <span className="rounded-full bg-ink-2 px-2.25 py-1.5 text-xs font-bold tracking-wide text-sand-2">
@@ -263,7 +297,7 @@ export function ProductSearch() {
                     <span className="text-sm text-sand-2">gera entrega separada</span>
                   </div>
                   <div className="mt-4 grid grid-cols-3 gap-4.5">
-                    {outrasFeirasDesktop.map((oferta) => (
+                    {outrasFeiras.map((oferta) => (
                       <OfertaCardDesktop key={oferta.produto.id} oferta={oferta} />
                     ))}
                   </div>
@@ -273,6 +307,53 @@ export function ProductSearch() {
           )}
         </main>
       </div>
+
+      {filtrosAbertos && (
+        <BottomSheet
+          onClose={() => setFiltrosAbertos(false)}
+          title="Filtros"
+          icon={
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#5B6B45" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 6h16M7 12h10M10 18h4" />
+            </svg>
+          }
+        >
+          <div>
+            <p className="mb-2.5 text-sm font-bold">Tamanho</p>
+            <div className="flex flex-wrap gap-2">
+              {TAMANHOS_DESKTOP.map((tamanho) => (
+                <button
+                  key={tamanho}
+                  type="button"
+                  onClick={() => setTamanhoFiltro((atual) => (atual === tamanho ? null : tamanho))}
+                  className={`rounded-lg px-3.5 py-2.25 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota focus-visible:ring-offset-1 ${
+                    tamanhoFiltro === tamanho
+                      ? 'bg-ink text-white'
+                      : 'border-[1.5px] border-sand-border bg-white text-ink hover:border-ink'
+                  }`}
+                >
+                  {tamanho}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="mt-1">
+            <p className="mb-2.5 text-sm font-bold">Preço até</p>
+            <input
+              type="range"
+              min={0}
+              max={PRECO_MAX_SLIDER}
+              step={10}
+              value={precoMax}
+              onChange={(e) => setPrecoMax(Number(e.target.value))}
+              className="w-full accent-terracota focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracota"
+            />
+            <p className="mt-2 text-xs text-muted-2">
+              {precoMax >= PRECO_MAX_SLIDER ? 'Sem limite de preço' : `Até ${formatPrice(precoMax)}`}
+            </p>
+          </div>
+        </BottomSheet>
+      )}
     </Screen>
   )
 }

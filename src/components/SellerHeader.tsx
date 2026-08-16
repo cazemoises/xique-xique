@@ -57,7 +57,12 @@ export function SellerHeader({ active, mobileTitle }: SellerHeaderProps) {
         </nav>
         <span className="text-sm text-sand-2">Modas Dona Zefa</span>
         <div className="flex-1" />
-        <span className="text-sm font-medium text-sand-2">Sair</span>
+        <Link
+          to="/"
+          className="rounded-sm text-sm font-medium text-sand-2 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ocre focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+        >
+          Sair
+        </Link>
       </div>
     </>
   )

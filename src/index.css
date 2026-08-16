@@ -67,3 +67,14 @@ body {
   font-family: var(--font-sans);
   color: var(--color-ink);
 }
+
+/* Blink/WebKit show the default arrow cursor on <button> unless told otherwise —
+   unlike <a>, which is pointer by default. Without this every button in the app
+   reads as non-interactive on hover even though it works on click. */
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
